@@ -12,6 +12,40 @@
         </div>
     <% } %>
 
+    <!-- Filter Options -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label for="filterStatus" class="form-label">Filter by Status</label>
+            <select id="filterStatus" class="form-select">
+                <option value="">All</option>
+                <option value="open">Open</option>
+                <option value="in-progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="filterPriority" class="form-label">Filter by Priority</label>
+            <select id="filterPriority" class="form-select">
+                <option value="">All</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="filterCategory" class="form-label">Filter by Category</label>
+            <select id="filterCategory" class="form-select">
+                <option value="">All</option>
+                <option value="hardware">Hardware</option>
+                <option value="software">Software</option>
+                <option value="network">Network</option>
+                <option value="email">Email</option>
+                <option value="access">Access & Security</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+    </div>
+
     <!-- Statistics Cards -->
     <div class="row mb-4">
         <div class="col-md-3 mb-4">
@@ -96,7 +130,7 @@
                     <tbody>
                         <% if (tickets && tickets.length > 0) { %>
                             <% tickets.forEach(ticket => { %>
-                                <tr>
+                                <tr data-status="<%= ticket.status %>" data-priority="<%= ticket.priority %>" data-category="<%= ticket.category %>">
                                     <td>#<%= ticket._id %></td>
                                     <td><%= ticket.title %></td>
                                     <td><%= ticket.creator.email %></td>
@@ -150,4 +184,33 @@ document.getElementById('ticketSearch').addEventListener('keyup', function() {
         row.style.display = text.includes(searchValue) ? '' : 'none';
     }
 });
+
+const filterStatus = document.getElementById('filterStatus');
+const filterPriority = document.getElementById('filterPriority');
+const filterCategory = document.getElementById('filterCategory');
+const ticketsTable = document.getElementById('ticketsTable');
+const rows = ticketsTable.getElementsByTagName('tr');
+
+function filterTickets() {
+    const status = filterStatus.value.toLowerCase();
+    const priority = filterPriority.value.toLowerCase();
+    const category = filterCategory.value.toLowerCase();
+
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const rowStatus = row.getAttribute('data-status').toLowerCase();
+        const rowPriority = row.getAttribute('data-priority').toLowerCase();
+        const rowCategory = row.getAttribute('data-category').toLowerCase();
+
+        const matchesStatus = !status || rowStatus === status;
+        const matchesPriority = !priority || rowPriority === priority;
+        const matchesCategory = !category || rowCategory === category;
+
+        row.style.display = matchesStatus && matchesPriority && matchesCategory ? '' : 'none';
+    }
+}
+
+filterStatus.addEventListener('change', filterTickets);
+filterPriority.addEventListener('change', filterTickets);
+filterCategory.addEventListener('change', filterTickets);
 </script>
