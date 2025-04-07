@@ -157,6 +157,16 @@
                             <a href="/tickets" class="btn btn-outline-secondary">Back to My Tickets</a>
                         <% } %>
                     </div>
+
+                    <div class="mt-4">
+                        <% if (ticket.status !== 'resolved') { %>
+                            <form action="/tickets/<%= ticket._id %>/resolve" method="POST">
+                                <button type="submit" class="btn btn-success">Mark as Resolved</button>
+                            </form>
+                        <% } else { %>
+                            <p class="text-success">This ticket has been resolved.</p>
+                        <% } %>
+                    </div>
                 </div>
             </div>
         </div>

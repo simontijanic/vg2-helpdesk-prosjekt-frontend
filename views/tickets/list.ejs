@@ -58,6 +58,15 @@
                                             <td>
                                                 <a href="/tickets/<%= ticket._id %>" class="btn btn-sm btn-info">View</a>
                                             </td>
+                                            <td>
+                                                <% if (ticket.status !== 'resolved') { %>
+                                                    <form action="/tickets/<%= ticket._id %>/resolve" method="POST" class="d-inline">
+                                                        <button type="submit" class="btn btn-sm btn-success">Resolve</button>
+                                                    </form>
+                                                <% } else { %>
+                                                    <span class="badge bg-success">Resolved</span>
+                                                <% } %>
+                                            </td>
                                         </tr>
                                         <!-- In the admin section of the ticket view -->
                                         <% if (locals.user.role === 'admin') { %>

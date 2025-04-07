@@ -1,9 +1,14 @@
 const dashboardController = {
     showDashboard: async (req, res) => {
         try {
+            const token = req.cookies.token; // Get token from cookies
+            if (!token) {
+                throw new Error("Authentication token is missing");
+            }
+
             const response = await fetch('http://localhost:4000/api/tickets/all', {
                 headers: {
-                    'Authorization': `Bearer ${req.session.token}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
 
@@ -26,7 +31,7 @@ const dashboardController = {
                 title: 'Admin Dashboard',
                 tickets,
                 stats,
-                user: req.session.user
+                user: res.locals.user // Pass user info from middleware
             });
         } catch (error) {
             console.error('Dashboard error:', error);

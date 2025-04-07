@@ -1,16 +1,17 @@
 const router = require('express').Router();
 const ticketController = require('../controllers/ticketController');
-const { isAuthenticated, isUser, isAdmin } = require('../middleware/auth');
+const { auth, isAdmin } = require('../middleware/auth');
 
 // User routes
-router.get('/tickets', isAuthenticated, isUser, ticketController.listTickets);
-router.get('/tickets/create', isAuthenticated, isUser, ticketController.showCreateForm);
-router.post('/tickets/create', isAuthenticated, isUser, ticketController.createTicket);
-router.get('/tickets/:id', isAuthenticated, ticketController.viewTicket);
-router.post('/tickets/:id/comments', isAuthenticated, ticketController.addComment);
+router.get('/tickets', auth, ticketController.listTickets);
+router.get('/tickets/create', auth, ticketController.showCreateForm);
+router.post('/tickets/create', auth, ticketController.createTicket);
+router.get('/tickets/:id', auth, ticketController.viewTicket);
+router.post('/tickets/:id/comments', auth, ticketController.addComment);
+router.post("/tickets/:id/resolve", auth, ticketController.markAsResolved); // Ensure this route exists
 
 // Add this new route for status updates (admin only)
-router.post('/tickets/:id/status', isAuthenticated, isAdmin, ticketController.updateStatus);
-router.post('/tickets/:id/priority', isAuthenticated, isAdmin, ticketController.updatePriority);
+router.post('/tickets/:id/status', auth, isAdmin, ticketController.updateStatus);
+router.post('/tickets/:id/priority', auth, isAdmin, ticketController.updatePriority);
 
 module.exports = router;
