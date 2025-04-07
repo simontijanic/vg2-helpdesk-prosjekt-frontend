@@ -1,8 +1,8 @@
-<div class="container">
+<div class="container-fluid">
     <div class="row mb-4">
-        <div class="col-md-12">
-            <h1 class="display-4">Admin Dashboard</h1>
-            <p class="lead">Overview of all support tickets</p>
+        <div class="col-12">
+            <h1 class="h2">Admin Dashboard</h1>
+            <p class="text-muted">Overview of all support tickets</p>
         </div>
     </div>
 
@@ -12,78 +12,107 @@
         </div>
     <% } %>
 
+    <!-- Statistics Cards -->
     <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card bg-primary text-white">
+        <div class="col-md-3 mb-4">
+            <div class="card bg-primary text-white h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Total Tickets</h5>
-                    <h2 class="card-text"><%= tickets ? tickets.length : 0 %></h2>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Total Tickets</h6>
+                            <h2 class="display-4 mb-0"><%= stats.total %></h2>
+                        </div>
+                        <i class="fas fa-ticket-alt fa-2x opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-warning text-dark">
+        <div class="col-md-3 mb-4">
+            <div class="card bg-warning text-dark h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Open</h5>
-                    <h2 class="card-text"><%= tickets ? tickets.filter(t => t.status === 'Open').length : 0 %></h2>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Open</h6>
+                            <h2 class="display-4 mb-0"><%= stats.open %></h2>
+                        </div>
+                        <i class="fas fa-door-open fa-2x opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-info text-white">
+        <div class="col-md-3 mb-4">
+            <div class="card bg-info text-white h-100">
                 <div class="card-body">
-                    <h5 class="card-title">In Progress</h5>
-                    <h2 class="card-text"><%= tickets ? tickets.filter(t => t.status === 'In Progress').length : 0 %></h2>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">In Progress</h6>
+                            <h2 class="display-4 mb-0"><%= stats.inProgress %></h2>
+                        </div>
+                        <i class="fas fa-clock fa-2x opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-success text-white">
+        <div class="col-md-3 mb-4">
+            <div class="card bg-success text-white h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Resolved</h5>
-                    <h2 class="card-text"><%= tickets ? tickets.filter(t => t.status === 'Resolved').length : 0 %></h2>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Resolved</h6>
+                            <h2 class="display-4 mb-0"><%= stats.resolved %></h2>
+                        </div>
+                        <i class="fas fa-check-circle fa-2x opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Tickets Table -->
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title mb-0">All Tickets</h3>
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">All Tickets</h5>
+                <div>
+                    <input type="text" id="ticketSearch" class="form-control" placeholder="Search tickets...">
+                </div>
+            </div>
         </div>
         <div class="card-body">
-            <% if (tickets && tickets.length > 0) { %>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Title</th>
-                                <th>User</th>
-                                <th>Status</th>
-                                <th>Priority</th>
-                                <th>Created</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+            <div class="table-responsive">
+                <table class="table table-hover" id="ticketsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Created By</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (tickets && tickets.length > 0) { %>
                             <% tickets.forEach(ticket => { %>
                                 <tr>
                                     <td>#<%= ticket._id %></td>
                                     <td><%= ticket.title %></td>
-                                    <td><%= ticket.userId.email %></td>
+                                    <td><%= ticket.creator.email %></td>
+                                    <td><%= ticket.category %></td>
                                     <td>
                                         <span class="badge bg-<%= 
-                                            ticket.status === 'Open' ? 'warning' : 
-                                            ticket.status === 'In Progress' ? 'info' : 
+                                            ticket.status === 'open' ? 'warning' : 
+                                            ticket.status === 'in-progress' ? 'info' : 
                                             'success' %>">
                                             <%= ticket.status %>
                                         </span>
                                     </td>
                                     <td>
                                         <span class="badge bg-<%= 
-                                            ticket.priority === 'High' ? 'danger' : 
-                                            ticket.priority === 'Medium' ? 'warning' : 
+                                            ticket.priority === 'high' ? 'danger' : 
+                                            ticket.priority === 'medium' ? 'warning' : 
                                             'success' %>">
                                             <%= ticket.priority %>
                                         </span>
@@ -94,12 +123,31 @@
                                     </td>
                                 </tr>
                             <% }); %>
-                        </tbody>
-                    </table>
-                </div>
-            <% } else { %>
-                <p class="text-center text-muted my-5">No tickets found in the system.</p>
-            <% } %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="8" class="text-center">No tickets found</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Add this to your layout file or include it here -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script>
+document.getElementById('ticketSearch').addEventListener('keyup', function() {
+    const searchValue = this.value.toLowerCase();
+    const table = document.getElementById('ticketsTable');
+    const rows = table.getElementsByTagName('tr');
+
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(searchValue) ? '' : 'none';
+    }
+});
+</script>

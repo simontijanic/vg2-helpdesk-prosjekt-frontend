@@ -95,7 +95,7 @@ const ticketController = {
     updateStatus: async (req, res) => {
         try {
             const response = await fetch(`http://localhost:4000/api/tickets/${req.params.id}/status`, {
-                method: 'PUT',
+                method: 'PATCH', // Change from PUT to PATCH
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${req.session.token}`

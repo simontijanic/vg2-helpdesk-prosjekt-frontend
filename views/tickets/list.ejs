@@ -57,6 +57,24 @@
                                                 <a href="/tickets/<%= ticket._id %>" class="btn btn-sm btn-info">View</a>
                                             </td>
                                         </tr>
+                                        <!-- In the admin section of the ticket view -->
+                                        <% if (locals.user.role === 'admin') { %>
+                                            <div class="card mb-4">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">Update Status</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <form action="/tickets/<%= ticket._id %>/status" method="POST" class="d-flex gap-2">
+                                                        <select class="form-select" name="status" required>
+                                                            <option value="open" <%= ticket.status === 'open' ? 'selected' : '' %>>Open</option>
+                                                            <option value="in-progress" <%= ticket.status === 'in-progress' ? 'selected' : '' %>>In Progress</option>
+                                                            <option value="resolved" <%= ticket.status === 'resolved' ? 'selected' : '' %>>Resolved</option>
+                                                        </select>
+                                                        <button type="submit" class="btn btn-primary">Update</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        <% } %>
                                     <% }); %>
                                 </tbody>
                             </table>
