@@ -11,5 +11,6 @@ router.post('/tickets/:id/comments', isAuthenticated, ticketController.addCommen
 
 // Add this new route for status updates (admin only)
 router.post('/tickets/:id/status', isAuthenticated, isAdmin, ticketController.updateStatus);
+router.post('/tickets/:id/priority', isAuthenticated, isAdmin, ticketController.updatePriority);
 
 module.exports = router;

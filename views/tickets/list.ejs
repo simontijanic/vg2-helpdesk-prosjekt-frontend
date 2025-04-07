@@ -45,10 +45,12 @@
                                             </td>
                                             <td>
                                                 <span class="badge bg-<%= 
-                                                    ticket.priority === 'High' ? 'danger' : 
-                                                    ticket.priority === 'Medium' ? 'warning' : 
+                                                    ticket.priority === 'high' ? 'danger' : 
+                                                    ticket.priority === 'medium' ? 'warning' : 
                                                     'success' %>">
-                                                    <%= ticket.priority %>
+                                                    <%= ticket.priority 
+                                                        ? ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1) 
+                                                        : 'Low' %> <!-- Default to 'Low' if priority is undefined -->
                                                 </span>
                                             </td>
                                             <td><%= new Date(ticket.createdAt).toLocaleDateString() %></td>
