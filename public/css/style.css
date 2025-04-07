@@ -1,0 +1,28 @@
+.comments-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.comment {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.comment:last-child {
+    border-bottom: none !important;
+}
+
+.ticket-history {
+    font-size: 0.9rem;
+}
+
+.history-entry {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.history-entry:last-child {
+    border-bottom: none;
+}

@@ -1,0 +1,64 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Create New Support Ticket</h3>
+                </div>
+                <div class="card-body">
+                    <% if (locals.error) { %>
+                        <div class="alert alert-danger" role="alert">
+                            <%= error %>
+                        </div>
+                    <% } %>
+
+                    <form action="/tickets/create" method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                            <div class="form-text">Brief description of the issue</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+                            <div class="form-text">Detailed explanation of your issue</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="category" class="form-label">Category</label>
+                                    <select class="form-select" id="category" name="category" required>
+                                        <option value="">Select a category</option>
+                                        <option value="hardware">Hardware</option>
+                                        <option value="software">Software</option>
+                                        <option value="network">Network</option>
+                                        <option value="email">Email</option>
+                                        <option value="access">Access & Security</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="priority" class="form-label">Priority</label>
+                                    <select class="form-select" id="priority" name="priority" required>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Submit Ticket</button>
+                            <a href="/tickets" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

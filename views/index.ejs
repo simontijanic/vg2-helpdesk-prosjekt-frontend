@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 text-center">
+        <h1 class="display-4 mb-4">Velkommen til Helpdesk</h1>
+        <p class="lead mb-4">Din IT-støtte portal for enkel og effektiv problemløsning</p>
+        
+        <% if (!locals.user) { %>
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="/login" class="btn btn-primary btn-lg px-4 gap-3">Login</a>
+            <a href="/register" class="btn btn-outline-secondary btn-lg px-4">Register</a>
+          </div>
+        <% } else { %>
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <% if (locals.user.role === 'admin') { %>
+              <a href="/dashboard" class="btn btn-primary btn-lg px-4 gap-3">Admin Dashboard</a>
+            <% } else { %>
+              <a href="/tickets/create" class="btn btn-success btn-lg px-4">Create New Ticket</a>
+              <a href="/tickets" class="btn btn-primary btn-lg px-4">My Tickets</a>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>

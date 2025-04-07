@@ -1,0 +1,105 @@
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="display-4">Admin Dashboard</h1>
+            <p class="lead">Overview of all support tickets</p>
+        </div>
+    </div>
+
+    <% if (locals.error) { %>
+        <div class="alert alert-danger" role="alert">
+            <%= error %>
+        </div>
+    <% } %>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Tickets</h5>
+                    <h2 class="card-text"><%= tickets ? tickets.length : 0 %></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h5 class="card-title">Open</h5>
+                    <h2 class="card-text"><%= tickets ? tickets.filter(t => t.status === 'Open').length : 0 %></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">In Progress</h5>
+                    <h2 class="card-text"><%= tickets ? tickets.filter(t => t.status === 'In Progress').length : 0 %></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Resolved</h5>
+                    <h2 class="card-text"><%= tickets ? tickets.filter(t => t.status === 'Resolved').length : 0 %></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title mb-0">All Tickets</h3>
+        </div>
+        <div class="card-body">
+            <% if (tickets && tickets.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>User</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% tickets.forEach(ticket => { %>
+                                <tr>
+                                    <td>#<%= ticket._id %></td>
+                                    <td><%= ticket.title %></td>
+                                    <td><%= ticket.userId.email %></td>
+                                    <td>
+                                        <span class="badge bg-<%= 
+                                            ticket.status === 'Open' ? 'warning' : 
+                                            ticket.status === 'In Progress' ? 'info' : 
+                                            'success' %>">
+                                            <%= ticket.status %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-<%= 
+                                            ticket.priority === 'High' ? 'danger' : 
+                                            ticket.priority === 'Medium' ? 'warning' : 
+                                            'success' %>">
+                                            <%= ticket.priority %>
+                                        </span>
+                                    </td>
+                                    <td><%= new Date(ticket.createdAt).toLocaleDateString() %></td>
+                                    <td>
+                                        <a href="/tickets/<%= ticket._id %>" class="btn btn-sm btn-primary">View</a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <p class="text-center text-muted my-5">No tickets found in the system.</p>
+            <% } %>
+        </div>
+    </div>
+</div>
