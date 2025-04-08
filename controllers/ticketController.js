@@ -52,36 +52,25 @@ const ticketController = {
 
   viewTicket: async (req, res) => {
     try {
-      const token = req.cookies.token; // Get token from cookies
-      if (!token) {
-        throw new Error("Authentication token is missing");
-      }
+        const ticket = await Ticket.findById(req.params.id)
+            .populate('creator', 'email')
+            .populate('comments.author', 'email')
+            .populate('history.performedBy', 'email');
 
-      const response = await fetch(
-        `http://localhost:4000/api/tickets/${req.params.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        if (!ticket) {
+            throw new Error("Ticket not found");
         }
-      );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch ticket");
-      }
-
-      const ticket = await response.json();
-
-      res.render("tickets/view", {
-        title: `Ticket #${ticket._id}`,
-        ticket,
-        user: res.locals.user, // Pass user info from middleware
-      });
+        res.render("tickets/view", {
+            title: `Ticket #${ticket._id}`,
+            ticket,
+            user: res.locals.user
+        });
     } catch (error) {
-      console.error("Error viewing ticket:", error);
-      res.redirect("/tickets?error=" + encodeURIComponent(error.message));
+        console.error("Error viewing ticket:", error);
+        res.redirect("/tickets?error=" + encodeURIComponent(error.message));
     }
-  },
+},
 
   updateStatus: async (req, res) => {
     try {

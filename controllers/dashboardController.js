@@ -1,22 +1,12 @@
+const Ticket = require('../models/ticketModel');
+
 const dashboardController = {
     showDashboard: async (req, res) => {
         try {
-            const token = req.cookies.token; // Get token from cookies
-            if (!token) {
-                throw new Error("Authentication token is missing");
-            }
-
-            const response = await fetch('http://localhost:4000/api/tickets/all', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch tickets');
-            }
-
-            const tickets = await response.json();
+            // Query tickets directly from database
+            const tickets = await Ticket.find()
+                .populate('creator', 'email')
+                .sort('-createdAt');
 
             // Calculate statistics
             const stats = {

@@ -1,24 +1,94 @@
-<div class="container">
+<div class="container py-5">
     <div class="row justify-content-center">
-      <div class="col-md-8 text-center">
-        <h1 class="display-4 mb-4">Velkommen til Helpdesk</h1>
-        <p class="lead mb-4">Din IT-støtte portal for enkel og effektiv problemløsning</p>
-        
-        <% if (!locals.user) { %>
-          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <a href="/login" class="btn btn-primary btn-lg px-4 gap-3">Login</a>
-            <a href="/register" class="btn btn-outline-secondary btn-lg px-4">Register</a>
-          </div>
-        <% } else { %>
-          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <% if (locals.user.role === 'admin') { %>
-              <a href="/dashboard" class="btn btn-primary btn-lg px-4 gap-3">Admin Dashboard</a>
+        <div class="col-md-10 text-center">
+            <h1 class="display-4 mb-4">Velkommen til Helpdesk</h1>
+            <p class="lead mb-4">Din IT-støtte portal for enkel og effektiv problemløsning</p>
+
+            <% if (!locals.user) { %>
+                <!-- Not logged in view -->
+                <div class="row mt-5">
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                                <h3>24/7 Support</h3>
+                                <p>Få hjelp når du trenger det med vårt dedikerte support-team</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <i class="fas fa-tasks fa-3x text-success mb-3"></i>
+                                <h3>Spor Saker</h3>
+                                <p>Hold oversikt over dine henvendelser og deres status</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <i class="fas fa-clock fa-3x text-info mb-3"></i>
+                                <h3>Rask Respons</h3>
+                                <p>Vi prioriterer din tid med raske og effektive løsninger</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-5">
+                    <a href="/login" class="btn btn-primary btn-lg px-4 me-3">Logg Inn</a>
+                    <a href="/register" class="btn btn-outline-secondary btn-lg px-4">Registrer Deg</a>
+                </div>
+
+            <% } else if (locals.user.role === 'admin') { %>
+                <!-- Admin view -->
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="card bg-dark text-white h-100 shadow-lg">
+                            <div class="card-body text-center py-5">
+                                <i class="fas fa-tachometer-alt fa-4x mb-4 text-white"></i>
+                                <h2 class="display-6 mb-4">Admin Dashboard</h2>
+                                <p class="lead mb-4">Oversikt over support-saker og brukeradministrasjon</p>
+                                <a href="/dashboard" class="btn btn-light btn-lg px-5">
+                                    <i class="fas fa-arrow-right me-2"></i>
+                                    Gå til Dashboard
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             <% } else { %>
-              <a href="/tickets/create" class="btn btn-success btn-lg px-4">Create New Ticket</a>
-              <a href="/tickets" class="btn btn-primary btn-lg px-4">My Tickets</a>
+                <!-- Regular user view -->
+                <div class="row mt-5">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-plus-circle fa-3x text-success mb-3"></i>
+                                <h3>Opprett Ny Sak</h3>
+                                <p class="mb-4">Trenger du hjelp? Opprett en ny support-sak her.</p>
+                                <a href="/tickets/create" class="btn btn-success btn-lg">Opprett Sak</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-list-alt fa-3x text-primary mb-3"></i>
+                                <h3>Mine Saker</h3>
+                                <p class="mb-4">Se status og oppdateringer på dine eksisterende saker.</p>
+                                <a href="/tickets" class="btn btn-primary btn-lg">Se Mine Saker</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-4 bg-light">
+                    <div class="card-body">
+                        <h4><i class="fas fa-info-circle"></i> Tips</h4>
+                        <p class="mb-0">Husk å inkludere så mye relevant informasjon som mulig når du oppretter en ny sak. Dette hjelper oss å løse problemet ditt raskere!</p>
+                    </div>
+                </div>
             <% } %>
-          </div>
-        <% } %>
-      </div>
+        </div>
     </div>
-  </div>
+</div>
