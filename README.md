@@ -145,5 +145,3 @@ Standard admin-bruker:
 ## Bonusfunksjoner
 - **Kommentarsystem**: Brukere og administratorer kan legge til kommentarer på tickets.
 - **Historikk**: Oversikt over alle oppdateringer på en ticket.
-
----
