@@ -190,13 +190,91 @@ Standard admin-bruker:
   - Relasjon: En kommentar er knyttet til én ticket og én bruker.
 
 # BASH SCRIPT
-## For å kjøre bashscript må du
+## Server Oppsett (Ubuntu 22.04)
 
-```linux
+### 1. Koble til Ubuntu-serveren
+```bash
+ssh brukernavn@server-ip
+```
 
-sudo nano setup.sh
+### 2. Last ned setup-scriptet
+```bash
+# Opprett en midlertidig mappe
+mkdir ~/temp && cd ~/temp
 
-sudo chmod +x setup.sh
-./setup.sh
+# Last ned setup-scriptet
+wget https://raw.githubusercontent.com/simontijanic/vg2-helpdesk-prosjekt-frontend/main/setup-server.sh
 
+# Gi scriptet kjøretillatelse
+chmod +x setup-server.sh
+```
+
+### 3. Kjør setup-scriptet
+```bash
+# Kjør scriptet
+bash setup-server.sh
+# Eller
+./setup-server.sh
+```
+
+### 4. Verifiser installasjonen
+Etter at scriptet er ferdig, sjekk at tjenesten kjører:
+```bash
+# Sjekk PM2 status
+pm2 status
+
+# Sjekk applikasjonslogger
+pm2 logs helpdesk
+
+# Sjekk at applikasjonen er tilgjengelig
+curl http://ipadresse:3000
+```
+
+### 5. Vanlige PM2 kommandoer
+```bash
+# Start applikasjonen
+pm2 start helpdesk
+
+# Restart applikasjonen
+pm2 restart helpdesk
+
+# Stopp applikasjonen
+pm2 stop helpdesk
+
+# Se logger
+pm2 logs helpdesk
+
+# Monitor ressursbruk
+pm2 monit
+```
+
+### Feilsøking
+
+#### PM2 ikke funnet
+Hvis `pm2` kommandoen ikke blir funnet, kjør:
+```bash
+source ~/.bashrc
+# eller
+export PATH="$HOME/.nvm/versions/node/$(node -v)/bin:$PATH"
+```
+
+#### Problemer med tilgang
+Hvis du får tilgangsfeil:
+```bash
+# Sjekk eierskap på applikasjonsmappen
+ls -l /var/www/helpdesk
+
+# Fix tilganger om nødvendig
+sudo chown -R $USER:$USER /var/www/helpdesk
+sudo chmod -R 755 /var/www/helpdesk
+```
+
+#### MongoDB tilkobling
+Hvis MongoDB ikke er tilgjengelig:
+```bash
+# Sjekk MongoDB status
+sudo systemctl status mongodb
+
+# Start MongoDB om nødvendig
+sudo systemctl start mongodb
 ```
