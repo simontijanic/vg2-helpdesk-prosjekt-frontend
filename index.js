@@ -43,7 +43,9 @@ app.use(ticketRoutes);
 
 app.use(dashboardRoutes);
 
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
    // seedData.seedAdmin(); // Seed initial data
   console.log('Server is running on port 3000');
 });
