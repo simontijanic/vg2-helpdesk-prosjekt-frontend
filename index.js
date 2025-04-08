@@ -48,22 +48,6 @@ app.use(ticketRoutes);
 
 app.use(dashboardRoutes);
 
-// Add this near your other routes
-app.get('/test-jwt', (req, res) => {
-    try {
-        const testToken = jwt.sign(
-            { test: 'data' },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-        console.log('Test token created:', testToken);
-        res.json({ success: true, token: testToken });
-    } catch (error) {
-        console.error('JWT Test Error:', error);
-        res.json({ success: false, error: error.message });
-    }
-});
-
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
