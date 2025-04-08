@@ -11,41 +11,40 @@ const authController = {
 
   login: async (req, res) => {
     try {
-      const { email, password } = req.body;
-      
-      // Validate email format
-      const emailRegex = /^\S+@\S+\.\S+$/;
-      if (!email || !emailRegex.test(email)) {
-        return res.redirect("/login?error=Ugyldig e-postadresse");
-      }
+        const { email, password } = req.body;
+        
+        console.log('Login attempt:', email); // Debug log
 
-      // Validate password exists
-      if (!password) {
-        return res.redirect("/login?error=Passord er påkrevd");
-      }
+        const user = await User.findOne({ email: email.toLowerCase() });
+        console.log('User found:', user ? 'Yes' : 'No'); // Debug log
 
-      const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user || !(await user.comparePassword(password))) {
+            console.log('Password match:', user ? 'No' : 'User not found'); // Debug log
+            return res.redirect("/login?error=Ugyldig e-post eller passord");
+        }
 
-      if (!user || !(await user.comparePassword(password))) {
-        return res.redirect("/login?error=Ugyldig e-post eller passord");
-      }
+        console.log('Creating token for user:', user._id); // Debug log
+        const token = jwt.sign(
+            { id: user._id, email: user.email, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: "24h" }
+        );
+        console.log('Token created:', token ? 'Yes' : 'No'); // Debug log
 
-      const token = jwt.sign(
-        { id: user._id, email: user.email, role: user.role },
-        process.env.JWT_SECRET,
-        { expiresIn: "24h" }
-      );
-
-      res.cookie("token", token, { 
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict'
-      });
-      
-      res.redirect("/");
+        // Add specific cookie settings for VM environment
+        res.cookie("token", token, { 
+            httpOnly: true,
+            secure: false, // Important for HTTP
+            sameSite: 'lax',
+            path: '/',
+            domain: req.hostname // Add this
+        });
+        
+        console.log('Cookie set with token'); // Debug log
+        res.redirect("/");
     } catch (error) {
-      console.error("Innloggingsfeil:", error);
-      res.redirect("/login?error=Det oppstod en feil ved innlogging");
+        console.error("Login error details:", error); // Enhanced error logging
+        res.redirect("/login?error=Det oppstod en feil ved innlogging");
     }
   },
 
