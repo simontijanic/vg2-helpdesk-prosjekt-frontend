@@ -1,10 +1,11 @@
 const router = require("express").Router();
 const authController = require("../controllers/authController");
+const { generalLimiter, authLimiter } = require('../middleware/rateLimiter');
 
 router.get("/login", authController.showLogin);
-router.post("/login", authController.login);
+router.post("/login", authLimiter, authController.login);
 router.get("/register", authController.showRegister);
-router.post("/register", authController.register);
+router.post("/register", authLimiter, authController.register);
 router.get("/logout", authController.logout);
 
 router.get("/", (req, res) => {
