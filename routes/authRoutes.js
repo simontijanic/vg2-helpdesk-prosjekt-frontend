@@ -8,8 +8,6 @@ router.get("/register", authController.showRegister);
 router.post("/register", authLimiter, authController.register);
 router.get("/logout", authController.logout);
 
-router.get("/", (req, res) => {
-  res.render("index");
-});
+router.get("/", authController.showIndexPage);
 
 module.exports = router;

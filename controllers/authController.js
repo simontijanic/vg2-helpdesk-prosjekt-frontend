@@ -97,6 +97,13 @@ const authController = {
     }
   },
 
+  showIndexPage: (req, res) => {
+    res.render("index", {
+      title: "Hjem",
+      user: res.locals.user,
+    });
+  },
+
   logout: (req, res) => {
     res.clearCookie("token", {
       httpOnly: true,
