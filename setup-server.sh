@@ -77,7 +77,7 @@ sudo_run chown -R $USER:$USER "$APP_DIR"
 
 # Clone the repository
 log "Cloning repository..."
-git clone https://github.com/your-username/helpdesk.git "$APP_DIR"
+git clone https://github.com/simontijanic/vg2-helpdesk-prosjekt-frontend.git "$APP_DIR"
 cd "$APP_DIR"
 
 # Create .env file
