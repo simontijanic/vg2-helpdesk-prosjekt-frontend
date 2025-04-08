@@ -51,23 +51,36 @@ sudo_run apt upgrade -y
 log "Installing required packages..."
 sudo_run apt install -y curl git build-essential
 
-# Install FNM (Fast Node Manager)
-log "Installing FNM..."
-curl -fsSL https://fnm.vercel.app/install | bash
+# Install NVM
+log "Installing NVM..."
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 
-# Add FNM to bash profile
-log "Configuring FNM..."
-echo 'eval "$(fnm env --use-on-cd)"' >> ~/.bashrc
+# Load NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Reload shell configuration
 source ~/.bashrc
 
 # Install Node.js
 log "Installing Node.js..."
-fnm install --latest
-fnm use --latest
+nvm install 18
+nvm use 18
 
-# Install PM2 globally
+# Install PM2 globally (with full path)
 log "Installing PM2..."
+export PATH="$NVM_DIR/versions/node/$(node -v)/bin:$PATH"
 npm install -g pm2
+
+# Add PM2 to PATH permanently
+log "Adding PM2 to PATH..."
+if ! grep -q "export PATH=\"\$HOME/.nvm/versions/node/\$(node -v)/bin:\$PATH\"" ~/.bashrc; then
+    echo 'export PATH="$HOME/.nvm/versions/node/$(node -v)/bin:$PATH"' >> ~/.bashrc
+fi
+
+# Reload shell configuration
+source ~/.bashrc
 
 # Create application directory
 APP_DIR="/var/www/helpdesk"
@@ -85,13 +98,13 @@ log "Creating .env file..."
 cat > .env << EOL
 MONGODB_URI=mongodb://localhost:27017/helpdesk
 JWT_SECRET=$(openssl rand -base64 32)
-PORT=80
+PORT=3000
 NODE_ENV=production
 EOL
 
 # Install dependencies
 log "Installing project dependencies..."
-npm install --production
+npm install
 
 # Configure PM2 ecosystem file
 log "Creating PM2 ecosystem config..."
@@ -104,7 +117,7 @@ module.exports = {
     exec_mode: 'cluster',
     env: {
       NODE_ENV: 'production',
-      PORT: 80
+      PORT: 3000
     }
   }]
 }
@@ -112,9 +125,12 @@ EOL
 
 # Start application with PM2
 log "Starting application with PM2..."
-sudo_run pm2 start ecosystem.config.js
-pm2 save
-sudo_run env PATH=$PATH:/usr/bin pm2 startup systemd -u $USER --hp $HOME
+"$NVM_DIR/versions/node/$(node -v)/bin/pm2" start ecosystem.config.js
+"$NVM_DIR/versions/node/$(node -v)/bin/pm2" save
+
+# Save PM2 startup script
+startup_script=$("$NVM_DIR/versions/node/$(node -v)/bin/pm2" startup | grep "sudo" | tail -n1)
+eval "sudo $startup_script"
 
 # Final setup
 log "Setting up final configurations..."
@@ -127,7 +143,7 @@ cat << EOL
 ====================================
  HelpDesk System Setup Complete
 ====================================
-- Web Interface: http://$SERVER_IP
+- Web Interface: http://$SERVER_IP:3000
 - Application Directory: $APP_DIR
 - Logs: pm2 logs helpdesk
 - Restart App: pm2 restart helpdesk
@@ -143,7 +159,7 @@ Next Steps:
 4. Consider setting up SSL/TLS
 
 Configuration Tips:
-- The app runs directly on port 80
+- The app runs on port 3000
 - PM2 runs in cluster mode for better performance
 - Auto-restart is enabled
 ====================================

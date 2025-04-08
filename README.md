@@ -188,3 +188,15 @@ Standard admin-bruker:
   - Primærnøkkel: `_id`
   - Felter: `text`, `author`, `createdAt`
   - Relasjon: En kommentar er knyttet til én ticket og én bruker.
+
+# BASH SCRIPT
+## For å kjøre bashscript må du
+
+```linux
+
+sudo nano setup.sh
+
+sudo chmod +x setup.sh
+./setup.sh
+
+```
