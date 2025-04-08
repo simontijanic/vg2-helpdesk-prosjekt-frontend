@@ -26,7 +26,7 @@ const ticketController = {
       res.redirect("/tickets");
     } catch (error) {
       console.error("Error creating ticket:", error);
-      res.redirect("/tickets/create?error=Failed to create ticket");
+      res.redirect("/tickets/create?error=Problemer med å lage sak");
     }
   },
 
@@ -45,7 +45,7 @@ const ticketController = {
         res.render("tickets/list", {
             title: "My Tickets",
             tickets: [],
-            error: "Failed to load tickets",
+            error: "Feilet å laste inn tickets",
         });
     }
   },
@@ -58,7 +58,7 @@ const ticketController = {
             .populate('history.performedBy', 'email');
 
         if (!ticket) {
-            throw new Error("Ticket not found");
+            throw new Error("Ticket ble ikke funnet");
         }
 
         res.render("tickets/view", {
@@ -67,7 +67,7 @@ const ticketController = {
             user: res.locals.user
         });
     } catch (error) {
-        console.error("Error viewing ticket:", error);
+        console.error("Problemer med å se ticket:", error);
         res.redirect("/tickets?error=" + encodeURIComponent(error.message));
     }
 },
@@ -76,7 +76,7 @@ const ticketController = {
     try {
       const ticket = await Ticket.findById(req.params.id);
       if (!ticket) {
-        return res.status(404).json({ message: "Ticket not found" });
+        return res.status(404).json({ message: "Ticket ble ikke funnet" });
       }
 
       ticket.status = req.body.status;
@@ -89,7 +89,7 @@ const ticketController = {
 
       res.redirect(`/tickets/${req.params.id}`);
     } catch (error) {
-      console.error("Error updating ticket status:", error);
+      console.error("Error å oppdatere ticket status:", error);
       res.redirect(
         `/tickets/${req.params.id}?error=` + encodeURIComponent(error.message)
       );
@@ -114,7 +114,7 @@ const ticketController = {
 
       res.redirect(`/tickets/${req.params.id}`);
     } catch (error) {
-      console.error("Error updating ticket priority:", error);
+      console.error("Error med å oppdatere ticket prioritet:", error);
       res.redirect(
         `/tickets/${req.params.id}?error=` + encodeURIComponent(error.message)
       );
@@ -125,7 +125,7 @@ const ticketController = {
     try {
       const ticket = await Ticket.findById(req.params.id);
       if (!ticket) {
-        return res.status(404).json({ message: "Ticket not found" });
+        return res.status(404).json({ message: "Ticket ble ikke funnet" });
       }
 
       ticket.comments.push({
@@ -137,7 +137,7 @@ const ticketController = {
 
       res.redirect(`/tickets/${req.params.id}`);
     } catch (error) {
-      console.error("Error adding comment:", error);
+      console.error("Problemer med å legge til kommentar:", error);
       res.redirect(
         `/tickets/${req.params.id}?error=` + encodeURIComponent(error.message)
       );
@@ -148,7 +148,7 @@ const ticketController = {
     try {
         const ticket = await Ticket.findById(req.params.id);
         if (!ticket) {
-            return res.status(404).json({ message: "Ticket not found" });
+            return res.status(404).json({ message: "Ticket ble ikke funnet" });
         }
 
         // Update the ticket status to "resolved"

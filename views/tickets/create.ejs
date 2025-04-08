@@ -16,27 +16,61 @@
                     <form action="/tickets/create" method="POST" class="needs-validation" novalidate>
                         <div class="mb-4">
                             <label for="title" class="form-label">Tittel</label>
-                            <input type="text" class="form-control form-control-lg" id="title" name="title" required>
-                            <div class="form-text">Kort beskrivelse av problemet</div>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg" 
+                                id="title" 
+                                name="title" 
+                                required
+                                minlength="5"
+                                maxlength="100"
+                            >
+                            <div class="form-text">
+                                Tittelen må:
+                                <ul class="mb-0 small">
+                                    <li>Være mellom 5 og 100 tegn</li>
+                                    <li>Være beskrivende og konsis</li>
+                                    <li>Oppsummere hovedproblemet</li>
+                                </ul>
+                            </div>
                         </div>
 
                         <div class="mb-4">
                             <label for="description" class="form-label">Beskrivelse</label>
-                            <textarea class="form-control" id="description" name="description" rows="6" required></textarea>
-                            <div class="form-text">Detaljert forklaring av problemet</div>
+                            <textarea 
+                                class="form-control" 
+                                id="description" 
+                                name="description" 
+                                rows="6" 
+                                required
+                                minlength="10"
+                            ></textarea>
+                            <div class="form-text">
+                                Beskrivelsen bør inneholde:
+                                <ul class="mb-0 small">
+                                    <li>Minst 10 tegn</li>
+                                    <li>Detaljert forklaring av problemet</li>
+                                    <li>Hva du har prøvd så langt</li>
+                                    <li>Eventuelle feilmeldinger</li>
+                                </ul>
+                            </div>
                         </div>
 
                         <div class="mb-4">
                             <label for="category" class="form-label">Kategori</label>
                             <select class="form-select form-select-lg" id="category" name="category" required>
                                 <option value="">Velg en kategori</option>
-                                <option value="hardware">Maskinvare</option>
-                                <option value="software">Programvare</option>
-                                <option value="network">Nettverk</option>
-                                <option value="email">E-post</option>
-                                <option value="access">Tilgang & Sikkerhet</option>
+                                <option value="hardware">Maskinvare (PC, skriver, etc.)</option>
+                                <option value="software">Programvare (Programmer, apper)</option>
+                                <option value="network">Nettverk (Internett, Wi-Fi)</option>
+                                <option value="email">E-post (Outlook, Gmail)</option>
+                                <option value="access">Tilgang & Sikkerhet (Passord, rettigheter)</option>
                                 <option value="other">Annet</option>
                             </select>
+                            <div class="form-text">
+                                Velg kategorien som best beskriver problemet ditt. 
+                                Dette hjelper oss å rute saken til riktig support-team.
+                            </div>
                         </div>
 
                         <div class="d-grid gap-2">
@@ -46,6 +80,8 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Tips Card -->
         </div>
     </div>
 </div>

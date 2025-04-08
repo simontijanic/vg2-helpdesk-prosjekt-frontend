@@ -4,14 +4,16 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: true,
+    required: [true, 'E-post er påkrevd'],
     unique: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
+    match: [/^\S+@\S+\.\S+$/, 'Ugyldig e-postadresse']
   },
   password: {
     type: String,
-    required: true
+    required: [true, 'Passord er påkrevd'],
+    minlength: [6, 'Passord må være minst 6 tegn langt']
   },
   role: {
     type: String,

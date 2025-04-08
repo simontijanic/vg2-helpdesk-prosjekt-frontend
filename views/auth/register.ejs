@@ -19,6 +19,7 @@
                 name="name"
                 required
               />
+              <div class="form-text">Skriv inn ditt fulle navn</div>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">E-post</label>
@@ -29,6 +30,7 @@
                 name="email"
                 required
               />
+              <div class="form-text">Bruk en gyldig e-postadresse du har tilgang til</div>
             </div>
             <div class="mb-3">
               <label for="password" class="form-label">Passord</label>
@@ -38,7 +40,14 @@
                 id="password"
                 name="password"
                 required
+                minlength="6"
               />
+              <div class="form-text">
+                Passord må inneholde:
+                <ul class="mb-0 small">
+                  <li>Minst 6 tegn</li>
+                </ul>
+              </div>
             </div>
             <button type="submit" class="btn bg-dark text-white w-100">
               Registrer Deg
