@@ -2,7 +2,7 @@
     <div class="row mb-4">
         <div class="col-md-12 d-flex justify-content-between align-items-center">
             <h1>My Tickets</h1>
-            <a href="/tickets/create" class="btn btn-primary">Create New Ticket</a>
+            <a href="/tickets/create" class="btn btn-dark">Create New Ticket</a>
         </div>
     </div>
 
@@ -56,7 +56,7 @@
                                             <td><%= new Date(ticket.createdAt).toLocaleDateString() %></td>
                                             <td><%= new Date(ticket.updatedAt).toLocaleDateString() %></td>
                                             <td>
-                                                <a href="/tickets/<%= ticket._id %>" class="btn btn-sm btn-info">View</a>
+                                                <a href="/tickets/<%= ticket._id %>" class="btn btn-sm btn-dark">View</a>
                                             </td>
                                             <td>
                                                 <% if (ticket.status !== 'resolved') { %>
