@@ -1,6 +1,21 @@
 .comments-list {
     max-height: 500px;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.2) transparent;
+}
+
+.comments-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.comments-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 3px;
 }
 
 .comment {
@@ -25,4 +40,98 @@
 
 .history-entry:last-child {
     border-bottom: none;
+}
+
+/* Responsive utilities */
+.container-fluid {
+    max-width: 1400px;
+}
+
+/* Card adjustments */
+.card {
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+}
+
+/* Table responsiveness */
+.table-responsive {
+    margin: 0;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1rem;
+    }
+
+    .table th, 
+    .table td {
+        padding: 0.75rem;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .container-fluid {
+        padding: 1rem;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+    }
+
+    .card-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .comment {
+        font-size: 0.95rem;
+    }
+
+    .form-select, .btn {
+        font-size: 0.9rem;
+    }
+
+    .container-fluid {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}
+
+/* Form improvements */
+.form-control-lg,
+.form-select-lg {
+    font-size: 1rem;
+}
+
+/* Statistics cards */
+.card .fas {
+    font-size: 1.5rem;
+}
+
+@media (max-width: 576px) {
+    .statistics-card {
+        text-align: center;
+    }
+    
+    .statistics-card .fas {
+        margin-bottom: 0.5rem;
+    }
+
+    .btn {
+        padding: 0.6rem 1rem;
+    }
+
+    .form-select, .form-control {
+        padding: 0.5rem;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
 }
