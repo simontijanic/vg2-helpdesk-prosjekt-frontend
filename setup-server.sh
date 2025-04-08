@@ -25,6 +25,9 @@ npm install -g pm2
 mkdir -p /var/www/helpdesk
 cd /var/www/helpdesk
 
+# Clone the repository
+git clone https://github.com/your-username/helpdesk.git .
+
 # Install project dependencies
 npm install --production
 

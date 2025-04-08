@@ -145,3 +145,46 @@ Standard admin-bruker:
 ## Bonusfunksjoner
 - **Kommentarsystem**: Brukere og administratorer kan legge til kommentarer på tickets.
 - **Historikk**: Oversikt over alle oppdateringer på en ticket.
+
+## ER-Diagram
+
+```plaintext
++-------------------+          +-------------------+
+|      User         |          |      Ticket       |
++-------------------+          +-------------------+
+| * _id (PK)        |<---------| * _id (PK)        |
+| email             |          | title             |
+| password          |          | description       |
+| role              |          | category          |
++-------------------+          | status            |
+                               | priority          |
+                               | creator (FK)      |
+                               +-------------------+
+                                       |
+                                       |
+                                       v
+                               +-------------------+
+                               |    Comment        |
+                               +-------------------+
+                               | * _id (PK)        |
+                               | text              |
+                               | author (FK)       |
+                               | createdAt         |
+                               +-------------------+
+```
+
+### Forklaring
+- **User**:
+  - Primærnøkkel: `_id`
+  - Felter: `email`, `password`, `role`
+  - Relasjon: En bruker kan opprette flere tickets (`creator` er en fremmednøkkel i `Ticket`).
+
+- **Ticket**:
+  - Primærnøkkel: `_id`
+  - Felter: `title`, `description`, `category`, `status`, `priority`, `creator`
+  - Relasjon: En ticket kan ha flere kommentarer (`author` er en fremmednøkkel i `Comment`).
+
+- **Comment**:
+  - Primærnøkkel: `_id`
+  - Felter: `text`, `author`, `createdAt`
+  - Relasjon: En kommentar er knyttet til én ticket og én bruker.

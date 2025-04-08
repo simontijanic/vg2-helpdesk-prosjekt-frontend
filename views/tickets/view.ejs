@@ -11,12 +11,14 @@
                 <!-- Ticket Header -->
                 <div class="card-header bg-dark text-white">
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
-                        <h3 class="h5 mb-0">Ticket #<%= ticket._id %></h3>
+                        <h3 class="h5 mb-0">Sak #<%= ticket._id %></h3>
                         <span class="badge bg-<%= 
                             ticket.status === 'open' ? 'warning' : 
                             ticket.status === 'in-progress' ? 'info' : 
                             'success' %>">
-                            <%= ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1) %>
+                            <%= ticket.status === 'open' ? 'Åpen' : 
+                                ticket.status === 'in-progress' ? 'Under arbeid' : 
+                                'Løst' %>
                         </span>
                     </div>
                 </div>
@@ -26,9 +28,9 @@
                     <div class="mb-4">
                         <h4 class="h5"><%= ticket.title %></h4>
                         <p class="text-muted small mb-0">
-                            Created by <%= ticket.creator.email %><br class="d-md-none">
-                            <span class="d-none d-md-inline"> on </span>
-                            <%= new Date(ticket.createdAt).toLocaleDateString() %>
+                            Opprettet av <%= ticket.creator.email %><br class="d-md-none">
+                            <span class="d-none d-md-inline"> den </span>
+                            <%= new Date(ticket.createdAt).toLocaleDateString('nb-NO') %>
                         </p>
                     </div>
 
@@ -36,18 +38,27 @@
                     <div class="row mb-4 g-2">
                         <div class="col-6">
                             <div class="p-2 bg-light rounded">
-                                <small class="d-block text-muted">Category</small>
-                                <strong><%= ticket.category.charAt(0).toUpperCase() + ticket.category.slice(1) %></strong>
+                                <small class="d-block text-muted">Kategori</small>
+                                <strong><%= 
+                                    ticket.category === 'hardware' ? 'Maskinvare' :
+                                    ticket.category === 'software' ? 'Programvare' :
+                                    ticket.category === 'network' ? 'Nettverk' :
+                                    ticket.category === 'email' ? 'E-post' :
+                                    ticket.category === 'access' ? 'Tilgang & Sikkerhet' :
+                                    'Annet'
+                                %></strong>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="p-2 bg-light rounded">
-                                <small class="d-block text-muted">Priority</small>
+                                <small class="d-block text-muted">Prioritet</small>
                                 <span class="badge bg-<%= 
                                     ticket.priority === 'high' ? 'danger' : 
                                     ticket.priority === 'medium' ? 'warning' : 
                                     'success' %>">
-                                    <%= ticket.priority ? ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1) : 'Low' %>
+                                    <%= ticket.priority === 'high' ? 'Høy' : 
+                                        ticket.priority === 'medium' ? 'Medium' : 
+                                        'Lav' %>
                                 </span>
                             </div>
                         </div>
@@ -55,7 +66,7 @@
 
                     <!-- Description -->
                     <div class="mb-4">
-                        <h5 class="h6">Description</h5>
+                        <h5 class="h6">Beskrivelse</h5>
                         <p class="mb-0"><%= ticket.description %></p>
                     </div>
 
@@ -65,16 +76,16 @@
                             <div class="col-12 col-md-6">
                                 <div class="card h-100">
                                     <div class="card-header py-2">
-                                        <h6 class="mb-0">Update Status</h6>
+                                        <h6 class="mb-0">Oppdater Status</h6>
                                     </div>
                                     <div class="card-body">
                                         <form action="/tickets/<%= ticket._id %>/status" method="POST" class="d-flex gap-2">
                                             <select class="form-select form-select-sm" name="status" required>
-                                                <option value="open" <%= ticket.status === 'open' ? 'selected' : '' %>>Open</option>
-                                                <option value="in-progress" <%= ticket.status === 'in-progress' ? 'selected' : '' %>>In Progress</option>
-                                                <option value="resolved" <%= ticket.status === 'resolved' ? 'selected' : '' %>>Resolved</option>
+                                                <option value="open" <%= ticket.status === 'open' ? 'selected' : '' %>>Åpen</option>
+                                                <option value="in-progress" <%= ticket.status === 'in-progress' ? 'selected' : '' %>>Under arbeid</option>
+                                                <option value="resolved" <%= ticket.status === 'resolved' ? 'selected' : '' %>>Løst</option>
                                             </select>
-                                            <button type="submit" class="btn btn-sm btn-dark">Update</button>
+                                            <button type="submit" class="btn btn-sm btn-dark">Oppdater</button>
                                         </form>
                                     </div>
                                 </div>
@@ -82,16 +93,16 @@
                             <div class="col-12 col-md-6">
                                 <div class="card h-100">
                                     <div class="card-header py-2">
-                                        <h6 class="mb-0">Update Priority</h6>
+                                        <h6 class="mb-0">Oppdater Prioritet</h6>
                                     </div>
                                     <div class="card-body">
                                         <form action="/tickets/<%= ticket._id %>/priority" method="POST" class="d-flex gap-2">
                                             <select class="form-select form-select-sm" name="priority" required>
-                                                <option value="low" <%= ticket.priority === 'low' ? 'selected' : '' %>>Low</option>
+                                                <option value="low" <%= ticket.priority === 'low' ? 'selected' : '' %>>Lav</option>
                                                 <option value="medium" <%= ticket.priority === 'medium' ? 'selected' : '' %>>Medium</option>
-                                                <option value="high" <%= ticket.priority === 'high' ? 'selected' : '' %>>High</option>
+                                                <option value="high" <%= ticket.priority === 'high' ? 'selected' : '' %>>Høy</option>
                                             </select>
-                                            <button type="submit" class="btn btn-sm btn-dark">Update</button>
+                                            <button type="submit" class="btn btn-sm btn-dark">Oppdater</button>
                                         </form>
                                     </div>
                                 </div>
@@ -102,7 +113,7 @@
                     <!-- Comments Section -->
                     <div class="card">
                         <div class="card-header py-2 bg-light">
-                            <h6 class="mb-0">Comments</h6>
+                            <h6 class="mb-0">Kommentarer</h6>
                         </div>
                         <div class="card-body">
                             <div class="comments-list mb-4" style="max-height: 400px; overflow-y: auto;">
@@ -111,31 +122,31 @@
                                         <div class="comment mb-3">
                                             <div class="d-flex flex-column flex-md-row justify-content-between gap-1 mb-2">
                                                 <strong class="text-break"><%= comment.author.email %></strong>
-                                                <small class="text-muted"><%= new Date(comment.createdAt).toLocaleString() %></small>
+                                                <small class="text-muted"><%= new Date(comment.createdAt).toLocaleString('nb-NO') %></small>
                                             </div>
                                             <p class="mb-3 pb-3 border-bottom"><%= comment.text %></p>
                                         </div>
                                     <% }); %>
                                 <% } else { %>
-                                    <p class="text-muted text-center my-4">No comments yet</p>
+                                    <p class="text-muted text-center my-4">Ingen kommentarer ennå</p>
                                 <% } %>
                             </div>
 
                             <!-- Add Comment Form -->
                             <form action="/tickets/<%= ticket._id %>/comments" method="POST">
                                 <div class="form-group mb-3">
-                                    <label for="text" class="form-label">Add a Comment</label>
+                                    <label for="text" class="form-label">Legg til kommentar</label>
                                     <textarea 
                                         class="form-control"
                                         id="text" 
                                         name="text" 
                                         rows="3"
                                         required
-                                        placeholder="Write your comment here..."
+                                        placeholder="Skriv din kommentar her..."
                                     ></textarea>
                                 </div>
                                 <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-dark">Add Comment</button>
+                                    <button type="submit" class="btn btn-dark">Legg til kommentar</button>
                                 </div>
                             </form>
                         </div>
@@ -145,16 +156,16 @@
                     <div class="d-grid gap-2 mt-4">
                         <% if (ticket.status !== 'resolved') { %>
                             <form action="/tickets/<%= ticket._id %>/resolve" method="POST" class="d-grid">
-                                <button type="submit" class="btn btn-success">Mark as Resolved</button>
+                                <button type="submit" class="btn btn-success">Marker som løst</button>
                             </form>
                         <% } else { %>
-                            <p class="alert alert-success mb-0 text-center">This ticket has been resolved.</p>
+                            <p class="alert alert-success mb-0 text-center">Denne saken er løst.</p>
                         <% } %>
                         
                         <% if (locals.user.role === 'admin') { %>
-                            <a href="/dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+                            <a href="/dashboard" class="btn btn-outline-secondary">Tilbake til dashbord</a>
                         <% } else { %>
-                            <a href="/tickets" class="btn btn-outline-secondary">Back to My Tickets</a>
+                            <a href="/tickets" class="btn btn-outline-secondary">Tilbake til mine saker</a>
                         <% } %>
                     </div>
                 </div>

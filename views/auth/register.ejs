@@ -3,7 +3,7 @@
     <div class="col-md-6">
       <div class="card shadow">
         <div class="card-header">
-          <h3 class="mb-0">Register</h3>
+          <h3 class="mb-0">Registrer Deg</h3>
         </div>
         <div class="card-body">
           <% if (locals.error) { %>
@@ -11,7 +11,7 @@
           <% } %>
           <form action="/register" method="POST">
             <div class="mb-3">
-              <label for="name" class="form-label">Full Name</label>
+              <label for="name" class="form-label">Fullt Navn</label>
               <input
                 type="text"
                 class="form-control"
@@ -21,7 +21,7 @@
               />
             </div>
             <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
+              <label for="email" class="form-label">E-post</label>
               <input
                 type="email"
                 class="form-control"
@@ -31,7 +31,7 @@
               />
             </div>
             <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
+              <label for="password" class="form-label">Passord</label>
               <input
                 type="password"
                 class="form-control"
@@ -41,11 +41,11 @@
               />
             </div>
             <button type="submit" class="btn bg-dark text-white w-100">
-              Register
+              Registrer Deg
             </button>
           </form>
           <div class="mt-3 text-center">
-            <p>Already have an account? <a href="/login">Login here</a></p>
+            <p>Har du allerede en konto? <a href="/login">Logg inn her</a></p>
           </div>
         </div>
       </div>

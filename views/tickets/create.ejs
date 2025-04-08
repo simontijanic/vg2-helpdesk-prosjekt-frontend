@@ -4,8 +4,8 @@
             <div class="card shadow">
                 <div class="card-header bg-dark text-white">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0">Create New Support Ticket</h3>
-                        <a href="/tickets" class="btn btn-outline-light btn-sm d-none d-md-block">Back to Tickets</a>
+                        <h3 class="mb-0">Opprett Ny Support-sak</h3>
+                        <a href="/tickets" class="btn btn-outline-light btn-sm d-none d-md-block">Tilbake til Saker</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -15,33 +15,33 @@
 
                     <form action="/tickets/create" method="POST" class="needs-validation" novalidate>
                         <div class="mb-4">
-                            <label for="title" class="form-label">Title</label>
+                            <label for="title" class="form-label">Tittel</label>
                             <input type="text" class="form-control form-control-lg" id="title" name="title" required>
-                            <div class="form-text">Brief description of the issue</div>
+                            <div class="form-text">Kort beskrivelse av problemet</div>
                         </div>
 
                         <div class="mb-4">
-                            <label for="description" class="form-label">Description</label>
+                            <label for="description" class="form-label">Beskrivelse</label>
                             <textarea class="form-control" id="description" name="description" rows="6" required></textarea>
-                            <div class="form-text">Detailed explanation of your issue</div>
+                            <div class="form-text">Detaljert forklaring av problemet</div>
                         </div>
 
                         <div class="mb-4">
-                            <label for="category" class="form-label">Category</label>
+                            <label for="category" class="form-label">Kategori</label>
                             <select class="form-select form-select-lg" id="category" name="category" required>
-                                <option value="">Select a category</option>
-                                <option value="hardware">Hardware</option>
-                                <option value="software">Software</option>
-                                <option value="network">Network</option>
-                                <option value="email">Email</option>
-                                <option value="access">Access & Security</option>
-                                <option value="other">Other</option>
+                                <option value="">Velg en kategori</option>
+                                <option value="hardware">Maskinvare</option>
+                                <option value="software">Programvare</option>
+                                <option value="network">Nettverk</option>
+                                <option value="email">E-post</option>
+                                <option value="access">Tilgang & Sikkerhet</option>
+                                <option value="other">Annet</option>
                             </select>
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-dark btn-lg">Submit Ticket</button>
-                            <a href="/tickets" class="btn btn-outline-secondary d-md-none">Cancel</a>
+                            <button type="submit" class="btn btn-dark btn-lg">Send Inn Sak</button>
+                            <a href="/tickets" class="btn btn-outline-secondary d-md-none">Avbryt</a>
                         </div>
                     </form>
                 </div>
@@ -53,16 +53,16 @@
 <% if (locals.user.role === 'admin') { %>
     <div class="card mb-4">
         <div class="card-header">
-            <h5 class="mb-0">Update Priority</h5>
+            <h5 class="mb-0">Oppdater Prioritet</h5>
         </div>
         <div class="card-body">
             <form action="/tickets/<%= ticket._id %>/priority" method="POST" class="d-flex gap-2">
                 <select class="form-select" name="priority" required>
-                    <option value="low" <%= ticket.priority === 'low' ? 'selected' : '' %>>Low</option>
+                    <option value="low" <%= ticket.priority === 'low' ? 'selected' : '' %>>Lav</option>
                     <option value="medium" <%= ticket.priority === 'medium' ? 'selected' : '' %>>Medium</option>
-                    <option value="high" <%= ticket.priority === 'high' ? 'selected' : '' %>>High</option>
+                    <option value="high" <%= ticket.priority === 'high' ? 'selected' : '' %>>Høy</option>
                 </select>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">Oppdater</button>
             </form>
         </div>
     </div>

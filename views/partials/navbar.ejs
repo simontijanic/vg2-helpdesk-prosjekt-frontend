@@ -9,28 +9,28 @@
         <% if (locals.user) { %>
           <% if (locals.user.role === "admin") { %>
             <li class="nav-item">
-              <a class="nav-link" href="/dashboard">Admin Dashboard</a>
+              <a class="nav-link" href="/dashboard">Admin Dashbord</a>
             </li>
           <% } else { %>
             <li class="nav-item">
-              <a class="nav-link" href="/tickets/create">Create Ticket</a>
+              <a class="nav-link" href="/tickets/create">Opprett Sak</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/tickets">My Tickets</a>
+              <a class="nav-link" href="/tickets">Mine Saker</a>
             </li>
           <% } %>
           <li class="nav-item">
             <span class="fw-bold nav-link text-light"><%= locals.user.email %></span>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
+            <a class="nav-link" href="/logout">Logg Ut</a>
           </li>
         <% } else { %>
           <li class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
+            <a class="nav-link" href="/login">Logg Inn</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/register">Register</a>
+            <a class="nav-link" href="/register">Registrer Deg</a>
           </li>
         <% } %>
       </ul>

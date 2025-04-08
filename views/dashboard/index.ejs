@@ -1,8 +1,8 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col-12">
-            <h1 class="h2">Admin Dashboard</h1>
-            <p class="text-muted">Overview of all support tickets</p>
+            <h1 class="h2">Admin Dashbord</h1>
+            <p class="text-muted">Oversikt over alle support-saker</p>
         </div>
     </div>
 
@@ -15,33 +15,33 @@
     <!-- Filter Options -->
     <div class="row mb-4">
         <div class="col-md-4">
-            <label for="filterStatus" class="form-label">Filter by Status</label>
+            <label for="filterStatus" class="form-label">Filtrer etter status</label>
             <select id="filterStatus" class="form-select">
-                <option value="">All</option>
-                <option value="open">Open</option>
-                <option value="in-progress">In Progress</option>
-                <option value="resolved">Resolved</option>
+                <option value="">Alle</option>
+                <option value="open">Åpen</option>
+                <option value="in-progress">Under arbeid</option>
+                <option value="resolved">Løst</option>
             </select>
         </div>
         <div class="col-md-4">
-            <label for="filterPriority" class="form-label">Filter by Priority</label>
+            <label for="filterPriority" class="form-label">Filtrer etter prioritet</label>
             <select id="filterPriority" class="form-select">
-                <option value="">All</option>
-                <option value="low">Low</option>
+                <option value="">Alle</option>
+                <option value="low">Lav</option>
                 <option value="medium">Medium</option>
-                <option value="high">High</option>
+                <option value="high">Høy</option>
             </select>
         </div>
         <div class="col-md-4">
-            <label for="filterCategory" class="form-label">Filter by Category</label>
+            <label for="filterCategory" class="form-label">Filtrer etter kategori</label>
             <select id="filterCategory" class="form-select">
-                <option value="">All</option>
-                <option value="hardware">Hardware</option>
-                <option value="software">Software</option>
-                <option value="network">Network</option>
-                <option value="email">Email</option>
-                <option value="access">Access & Security</option>
-                <option value="other">Other</option>
+                <option value="">Alle</option>
+                <option value="hardware">Maskinvare</option>
+                <option value="software">Programvare</option>
+                <option value="network">Nettverk</option>
+                <option value="email">E-post</option>
+                <option value="access">Tilgang & Sikkerhet</option>
+                <option value="other">Annet</option>
             </select>
         </div>
     </div>
@@ -49,11 +49,11 @@
     <!-- Statistics Cards -->
     <div class="row mb-4">
         <div class="col-md-3 mb-4">
-            <div class="card bg-light h-100">''
+            <div class="card bg-light h-100">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-uppercase mb-1">Total Tickets</h6>
+                            <h6 class="text-uppercase mb-1">Totalt antall saker</h6>
                             <h2 class="display-4 mb-0"><%= stats.total %></h2>
                         </div>
                         <i class="fas fa-ticket-alt fa-2x opacity-100"></i>
@@ -66,7 +66,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-uppercase mb-1">Open</h6>
+                            <h6 class="text-uppercase mb-1">Åpne saker</h6>
                             <h2 class="display-4 mb-0"><%= stats.open %></h2>
                         </div>
                         <i class="fas fa-door-open fa-2x opacity-100"></i>
@@ -79,7 +79,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-uppercase mb-1">In Progress</h6>
+                            <h6 class="text-uppercase mb-1">Under arbeid</h6>
                             <h2 class="display-4 mb-0"><%= stats.inProgress %></h2>
                         </div>
                         <i class="fas fa-clock fa-2x opacity-100"></i>
@@ -92,7 +92,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-uppercase mb-1">Resolved</h6>
+                            <h6 class="text-uppercase mb-1">Løste saker</h6>
                             <h2 class="display-4 mb-0"><%= stats.resolved %></h2>
                         </div>
                         <i class="fas fa-check-circle fa-2x opacity-100"></i>
@@ -106,9 +106,9 @@
     <div class="card">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">All Tickets</h5>
+                <h5 class="mb-0">Alle saker</h5>
                 <div>
-                    <input type="text" id="ticketSearch" class="form-control" placeholder="Search tickets...">
+                    <input type="text" id="ticketSearch" class="form-control" placeholder="Søk i saker...">
                 </div>
             </div>
         </div>
@@ -118,13 +118,13 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Title</th>
-                            <th>Created By</th>
-                            <th>Category</th>
+                            <th>Tittel</th>
+                            <th>Opprettet av</th>
+                            <th>Kategori</th>
                             <th>Status</th>
-                            <th>Priority</th>
-                            <th>Created</th>
-                            <th>Actions</th>
+                            <th>Prioritet</th>
+                            <th>Opprettet</th>
+                            <th>Handlinger</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -134,13 +134,22 @@
                                     <td>#<%= ticket._id %></td>
                                     <td><%= ticket.title %></td>
                                     <td><%= ticket.creator.email %></td>
-                                    <td><%= ticket.category %></td>
+                                    <td>
+                                        <%= ticket.category === 'hardware' ? 'Maskinvare' :
+                                            ticket.category === 'software' ? 'Programvare' :
+                                            ticket.category === 'network' ? 'Nettverk' :
+                                            ticket.category === 'email' ? 'E-post' :
+                                            ticket.category === 'access' ? 'Tilgang & Sikkerhet' :
+                                            'Annet' %>
+                                    </td>
                                     <td>
                                         <span class="badge bg-<%= 
                                             ticket.status === 'open' ? 'warning' : 
                                             ticket.status === 'in-progress' ? 'info' : 
                                             'success' %>">
-                                            <%= ticket.status %>
+                                            <%= ticket.status === 'open' ? 'Åpen' : 
+                                                ticket.status === 'in-progress' ? 'Under arbeid' : 
+                                                'Løst' %>
                                         </span>
                                     </td>
                                     <td>
@@ -148,18 +157,20 @@
                                             ticket.priority === 'high' ? 'danger' : 
                                             ticket.priority === 'medium' ? 'warning' : 
                                             'success' %>">
-                                            <%= ticket.priority %>
+                                            <%= ticket.priority === 'high' ? 'Høy' : 
+                                                ticket.priority === 'medium' ? 'Medium' : 
+                                                'Lav' %>
                                         </span>
                                     </td>
-                                    <td><%= new Date(ticket.createdAt).toLocaleDateString() %></td>
+                                    <td><%= new Date(ticket.createdAt).toLocaleDateString('nb-NO') %></td>
                                     <td>
-                                        <a href="/tickets/<%= ticket._id %>" class="btn btn-sm btn-dark">View</a>
+                                        <a href="/tickets/<%= ticket._id %>" class="btn btn-sm btn-dark">Se sak</a>
                                     </td>
                                 </tr>
                             <% }); %>
                         <% } else { %>
                             <tr>
-                                <td colspan="8" class="text-center">No tickets found</td>
+                                <td colspan="8" class="text-center">Ingen saker funnet</td>
                             </tr>
                         <% } %>
                     </tbody>
