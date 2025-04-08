@@ -7,8 +7,8 @@ const generalLimiter = rateLimit({
 });
 
 const authLimiter = rateLimit({
-    windowMs: 0, // 15 minutter
-    max: 15, // Maks 10 forespørsler
+    windowMs: 15 * 60 * 1000, // 15 minutter
+    max: 10, // Maks 10 forespørsler
     message: 'For mange innloggingsforsøk. Prøv igjen senere.',
 });
 
