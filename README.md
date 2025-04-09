@@ -150,7 +150,7 @@ Standard admin-bruker:
 
 Følgende diagram viser relasjonene mellom entitetene i databasen:
 
-![ER Diagram](public/images/diagram)
+![ER Diagram](./public/images/diagram.png)
 
 ### Relasjoner:
 1. **Bruker ↔ Ticket**:
