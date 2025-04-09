@@ -49,7 +49,7 @@ sudo_run apt upgrade -y
 
 # Install required packages
 log "Installing required packages..."
-sudo_run apt install -y curl git build-essential
+sudo_run apt install -y curl git build-essential nginx
 
 # Install NVM
 log "Installing NVM..."
@@ -128,6 +128,39 @@ log "Starting application with PM2..."
 "$NVM_DIR/versions/node/$(node -v)/bin/pm2" start ecosystem.config.js
 "$NVM_DIR/versions/node/$(node -v)/bin/pm2" save
 
+# Configure Nginx
+log "Configuring Nginx as reverse proxy..."
+sudo_run tee /etc/nginx/sites-available/helpdesk << 'EOL'
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+EOL
+
+# Enable the Nginx site
+log "Enabling Nginx site..."
+sudo_run rm -f /etc/nginx/sites-enabled/default
+sudo_run ln -s /etc/nginx/sites-available/helpdesk /etc/nginx/sites-enabled/
+
+# Test Nginx configuration
+log "Testing Nginx configuration..."
+sudo_run nginx -t
+
+# Restart Nginx
+log "Restarting Nginx..."
+sudo_run systemctl restart nginx
+
 # Save PM2 startup script
 startup_script=$("$NVM_DIR/versions/node/$(node -v)/bin/pm2" startup | grep "sudo" | tail -n1)
 eval "sudo $startup_script"
@@ -143,10 +176,11 @@ cat << EOL
 ====================================
  HelpDesk System Setup Complete
 ====================================
-- Web Interface: http://$SERVER_IP:3000
+- Web Interface: http://$SERVER_IP
 - Application Directory: $APP_DIR
 - Logs: pm2 logs helpdesk
 - Restart App: pm2 restart helpdesk
+- Nginx logs: /var/log/nginx/access.log and error.log
 
 Default Admin Account:
 - Email: admin@helpdesk.com
@@ -156,11 +190,12 @@ Next Steps:
 1. Update the admin password
 2. Configure MongoDB if needed
 3. Consider setting up a firewall (ufw)
-4. Consider setting up SSL/TLS
+4. Consider setting up SSL/TLS with Let's Encrypt
 
 Configuration Tips:
-- The app runs on port 3000
+- The app runs on port 3000 (proxied through Nginx on port 80)
 - PM2 runs in cluster mode for better performance
 - Auto-restart is enabled
+- Nginx is configured as a reverse proxy
 ====================================
 EOL
