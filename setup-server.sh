@@ -116,6 +116,58 @@ sudo_run sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/
 sudo_run sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 sudo_run systemctl restart sshd
 
+# ...existing code...
+
+# Configure SSH security
+log "Configuring SSH security settings..."
+sudo_run sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo_run sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+
+# Add SSH security configurations with Match blocks
+cat << 'EOL' | sudo_run tee -a /etc/ssh/sshd_config
+
+# Global SSH settings
+PermitRootLogin no
+MaxAuthTries 3
+ClientAliveInterval 300
+ClientAliveCountMax 2
+
+# Match block for developer access
+Match User dev
+    AllowTcpForwarding yes
+    X11Forwarding yes
+    PasswordAuthentication no
+    PermitTTY yes
+    MaxSessions 10
+    AllowAgentForwarding yes
+    PermitTunnel yes
+
+# Match block for admin users
+Match User geir,monica
+    AllowTcpForwarding yes
+    X11Forwarding no
+    PasswordAuthentication no
+    PermitTTY yes
+    MaxSessions 3
+
+# Match block for other users
+Match Group users
+    AllowTcpForwarding no
+    X11Forwarding no
+    PasswordAuthentication no
+    PermitTTY yes
+    MaxSessions 2
+
+# Match block for internal network
+Match Address 10.0.0.0/8
+    MaxSessions 5
+EOL
+
+# Restart SSH service to apply changes
+sudo_run systemctl restart sshd
+
+# ...existing code...
+
 # Install and configure UFW firewall
 log "Installing and configuring UFW firewall..."
 sudo_run apt install -y ufw
