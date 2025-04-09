@@ -278,3 +278,117 @@ sudo systemctl status mongodb
 # Start MongoDB om nødvendig
 sudo systemctl start mongodb
 ```
+
+### Firewall Configuration (UFW)
+
+#### Application Server
+```bash
+# Install UFW
+sudo apt install ufw
+
+# Set default policies
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Allow SSH (port 22)
+sudo ufw allow ssh
+
+# Allow HTTP (port 80)
+sudo ufw allow http
+
+# Allow HTTPS (port 443)
+sudo ufw allow https
+
+# Enable UFW
+sudo ufw enable
+
+# Check status
+sudo ufw status
+```
+
+#### Database Server
+```bash
+# Install UFW
+sudo apt install ufw
+
+# Set default policies
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Allow SSH (port 22)
+sudo ufw allow ssh
+
+# Allow MongoDB from Application Server only
+sudo ufw allow from <app-server-ip> to any port 27017
+
+# Enable UFW
+sudo ufw enable
+
+# Check status
+sudo ufw status
+```
+
+### MongoDB Security Configuration
+
+1. **Enable Authentication**:
+   Edit `/etc/mongod.conf`:
+   ```yaml
+   security:
+     authorization: enabled
+   ```
+
+2. **Network Configuration**:
+   ```yaml
+   net:
+     port: 27017
+     bindIp: 127.0.0.1,<mongodb-server-ip>
+   ```
+
+3. **Create Admin User**:
+   ```javascript
+   use admin
+   db.createUser({
+     user: "admin",
+     pwd: "secure_password_here",
+     roles: [ "userAdminAnyDatabase", "dbAdminAnyDatabase", "readWriteAnyDatabase" ]
+   })
+   ```
+
+4. **Create Application User**:
+   ```javascript
+   use helpdesk
+   db.createUser({
+     user: "helpdesk_user",
+     pwd: "another_secure_password",
+     roles: [
+       { role: "readWrite", db: "helpdesk" }
+     ]
+   })
+   ```
+
+5. **Update Connection String**:
+   ```
+   mongodb://helpdesk_user:password@<mongodb-server-ip>:27017/helpdesk
+   ```
+
+6. **Restart MongoDB**:
+   ```bash
+   sudo systemctl restart mongod
+   ```
+
+7. **Verify Configuration**:
+   ```bash
+   # Check MongoDB status
+   sudo systemctl status mongod
+   
+   # Check logs for errors
+   sudo tail -f /var/log/mongodb/mongod.log
+   ```
+
+Security Best Practices:
+- Keep MongoDB version updated
+- Use strong passwords
+- Regularly backup database
+- Monitor logs for unauthorized access attempts
+- Use SSL/TLS for MongoDB connections in production
+- Follow the principle of least privilege when creating users
