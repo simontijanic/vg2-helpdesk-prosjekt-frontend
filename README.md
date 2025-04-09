@@ -173,6 +173,18 @@ Følgende diagram viser relasjonene mellom entitetene i databasen:
    - En `Historikk`-oppføring er utført av en `Bruker` (mange-til-en-relasjon).
    - Feltet `performedBy` i `History`-modellen refererer til `_id` i `User`-modellen.
 
+## Nettverksoppsett
+
+![Nettverksdiagram](./public/images/cisco.png)
+
+Dette prosjektet er satt opp i et nettverk med følgende noder:
+
+- **Node.js-applikasjon**: Kjøres på en virtuell maskin med IP-adressen og bruker nginx som reversproxy `10.12.14.135`.
+- **DNS-server**: Håndterer domenenavn. Bruker bind9 og kjører på IP-adressen `10.12.14.10`.
+- **MongoDB-database**: Kjøres på en virtuell maskin med IP-adressen `10.12.14.179`.
+
+Nettverket er designet for å sikre effektiv kommunikasjon mellom applikasjonen, DNS-serveren og databasen, samtidig som det opprettholder høy sikkerhet og ytelse.
+
 # BASH SCRIPT
 ## Server Oppsett (Ubuntu 22.04)
 
@@ -184,7 +196,7 @@ ssh brukernavn@server-ip
 ### 2. Last ned setup-scriptet
 ```bash
 # Opprett en midlertidig mappe
-mkdir ~/temp && cd ~/temp
+mkdir ~/temp og cd ~/temp
 
 # Last ned setup-scriptet
 wget https://raw.githubusercontent.com/simontijanic/vg2-helpdesk-prosjekt-frontend/main/setup-server.sh
