@@ -340,33 +340,6 @@ sudo ufw status
      bindIp: 127.0.0.1,<mongodb-server-ip>
    ```
 
-3. **Create Admin User**:
-   ```javascript
-   use admin
-   db.createUser({
-     user: "admin",
-     pwd: "secure_password_here",
-     roles: [ "userAdminAnyDatabase", "dbAdminAnyDatabase", "readWriteAnyDatabase" ]
-   })
-   ```
-
-4. **Create Application User**:
-   ```javascript
-   use helpdesk
-   db.createUser({
-     user: "helpdesk_user",
-     pwd: "another_secure_password",
-     roles: [
-       { role: "readWrite", db: "helpdesk" }
-     ]
-   })
-   ```
-
-5. **Update Connection String**:
-   ```
-   mongodb://helpdesk_user:password@<mongodb-server-ip>:27017/helpdesk
-   ```
-
 6. **Restart MongoDB**:
    ```bash
    sudo systemctl restart mongod
@@ -381,13 +354,6 @@ sudo ufw status
    sudo tail -f /var/log/mongodb/mongod.log
    ```
 
-Security Best Practices:
-- Keep MongoDB version updated
-- Use strong passwords
-- Regularly backup database
-- Monitor logs for unauthorized access attempts
-- Use SSL/TLS for MongoDB connections in production
-- Follow the principle of least privilege when creating users
 
 ## Sikkerhetsoppsett
 
@@ -446,35 +412,6 @@ SSH-konfigurasjonen bruker **Match Blocks** for å spesifisere regler for ulike 
     ```
     - Maksimalt 5 samtidige sesjoner for tilkoblinger fra det interne nettverket.
 
-### 2. UFW-regler
-UFW (Uncomplicated Firewall) er konfigurert for å beskytte serveren. Reglene er definert i `setup-server.sh` og gjelder for både applikasjonsserveren (Nginx/Node.js) og databasen (MongoDB).
-
-#### **UFW-regler for Nginx/Node.js-serveren**:
-- **Standardpolicyer**:
-  - `sudo ufw default deny incoming`: Blokkerer alle innkommende tilkoblinger som standard.
-  - `sudo ufw default allow outgoing`: Tillater alle utgående tilkoblinger som standard.
-
-- **Tillatte porter**:
-  - `sudo ufw allow ssh`: Tillater SSH-tilkoblinger (port 22).
-  - `sudo ufw allow http`: Tillater HTTP-trafikk (port 80).
-  - `sudo ufw allow https`: Tillater HTTPS-trafikk (port 443).
-
-- **Aktivering**:
-  - `sudo ufw enable`: Aktiverer brannmuren.
-
-#### **UFW-regler for MongoDB-serveren**:
-- **Standardpolicyer**:
-  - `sudo ufw default deny incoming`: Blokkerer alle innkommende tilkoblinger som standard.
-  - `sudo ufw default allow outgoing`: Tillater alle utgående tilkoblinger som standard.
-
-- **Tillatte porter**:
-  - `sudo ufw allow ssh`: Tillater SSH-tilkoblinger (port 22).
-  - `sudo ufw allow from <app-server-ip> to any port 27017`: Tillater MongoDB-tilkoblinger kun fra applikasjonsserverens IP.
-
-- **Aktivering**:
-  - `sudo ufw enable`: Aktiverer brannmuren.
-
-Ved å skille reglene på denne måten blir det tydelig hvilke regler som gjelder for applikasjonsserveren og hvilke som gjelder for databasen.
 
 ### 3. IP-binding til MongoDB
 MongoDB er konfigurert til å kun lytte på spesifikke IP-adresser for økt sikkerhet. Dette er definert i `setup-server.sh` og MongoDB-konfigurasjonsfilen (`/etc/mongod.conf`):
@@ -495,3 +432,32 @@ MongoDB er konfigurert til å kun lytte på spesifikke IP-adresser for økt sikk
   ```
 
 Disse sikkerhetsmekanismene sikrer at serveren og databasen er beskyttet mot uautoriserte tilkoblinger.
+
+### UFW-regler for servere
+
+#### Node.js-applikasjonsserver
+- **Standardpolicyer**:
+  - `sudo ufw default deny incoming`: Blokkerer alle innkommende tilkoblinger som standard.
+  - `sudo ufw default allow outgoing`: Tillater alle utgående tilkoblinger som standard.
+
+- **Tillatte porter**:
+  - `sudo ufw allow ssh`: Tillater SSH-tilkoblinger (port 22).
+  - `sudo ufw allow http`: Tillater HTTP-trafikk (port 80).
+  - `sudo ufw allow https`: Tillater HTTPS-trafikk (port 443).
+
+- **Aktivering**:
+  - `sudo ufw enable`: Aktiverer brannmuren.
+
+#### MongoDB-databaseserver
+- **Standardpolicyer**:
+  - `sudo ufw default deny incoming`: Blokkerer alle innkommende tilkoblinger som standard.
+  - `sudo ufw default allow outgoing`: Tillater alle utgående tilkoblinger som standard.
+
+- **Tillatte porter**:
+  - `sudo ufw allow ssh`: Tillater SSH-tilkoblinger (port 22).
+  - `sudo ufw allow from 10.12.14.135 to any port 27017`: Tillater MongoDB-tilkoblinger kun fra Node.js-applikasjonsserverens IP.
+
+- **Aktivering**:
+  - `sudo ufw enable`: Aktiverer brannmuren.
+
+  Dette er dokumentasjonen for prosjektet
