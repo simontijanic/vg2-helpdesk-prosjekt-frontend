@@ -47,6 +47,53 @@ log "Updating system packages..."
 sudo_run apt update
 sudo_run apt upgrade -y
 
+# Create users and set up SSH
+log "Creating users and configuring SSH..."
+
+# Create geir user
+log "Setting up user: geir"
+sudo_run useradd -m -s /bin/bash geir
+sudo_run usermod -aG sudo geir
+
+# Set up SSH directory for geir
+sudo_run mkdir -p /home/geir/.ssh
+sudo_run touch /home/geir/.ssh/authorized_keys
+sudo_run chown -R geir:geir /home/geir/.ssh
+sudo_run chmod 700 /home/geir/.ssh
+sudo_run chmod 600 /home/geir/.ssh/authorized_keys
+
+# Add geir's SSH keys
+cat << 'EOL' | sudo_run tee /home/geir/.ssh/authorized_keys
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINaz9F92MfdzWwt48AV/IV2vPLyeUDLSWcxcz4vAT3xl
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID6Z9U0XvlDlSFOHZrlSIfM14J6V6TId/O1x8cVjS1zB
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDpEkOGW4xXjrjn19qFWfbS5vtnQCaYQQhNMXXD9MpeM
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFjmEi93xypzRNt8H9ulJ63OQ9tCT8CcK1yNyHPZLX7F
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAqA0AgzyQLKbjEZYYA+EpM6lyRdKsJwa0444syRD/tm
+EOL
+
+# Create monica user
+log "Setting up user: monica"
+sudo_run useradd -m -s /bin/bash monica
+sudo_run usermod -aG sudo monica
+
+# Set up SSH directory for monica
+sudo_run mkdir -p /home/monica/.ssh
+sudo_run touch /home/monica/.ssh/authorized_keys
+sudo_run chown -R monica:monica /home/monica/.ssh
+sudo_run chmod 700 /home/monica/.ssh
+sudo_run chmod 600 /home/monica/.ssh/authorized_keys
+
+# Add monica's SSH key
+cat << 'EOL' | sudo_run tee /home/monica/.ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCsoAXfKBNbQ8F+z1jOK95+MgEN8vrF60/fi4YEWihcFkMdqQHD+1Jb8ENl+aoNc5UO8wRdEmLX6bihyyJUtsQgsUyjQQld0L1vIEmBLkuFUJsjzzd88q55BiIhE9Cw/9qsNoPW/ojQoiiEl9fBAxCjSeieztbJtNI6xJ0Py0EYdvacjjmDz41MeRR8Z3IH/FXzODd3Z1gUmR0rnxteITx4GqnhNLd3PiPiRcTnHX99Je3dTFQzKYvBzo6PCPflTNWGe+4HaKHQbKV5coEqjtCbwsuYg9Cz/ytBImqsYDKEocRBoPGwh/UMKJ3IriPMsyJgSMi1dqeAGHf/koTlRda5uKS0WsAFZyiBwR6n00YWDOVnpA27ye7Jxi3sjQBSwWvkB8SIolbaAXisD/v5BHvyNpdAddTFhBu9yFXZ11vQugs0M+3wy21AMlny+MD3AIHuxaRQ5JQUoCdg6ITiF7qq4UrLXna0lWluXr28KlfquNL3jGBiJIFEWqDxMZDFULE= monica@Monica-sin-MacBook-Pro.local
+EOL
+
+# Configure SSH security
+log "Configuring SSH security settings..."
+sudo_run sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo_run sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo_run systemctl restart sshd
+
 # Install required packages
 log "Installing required packages..."
 sudo_run apt install -y curl git build-essential nginx

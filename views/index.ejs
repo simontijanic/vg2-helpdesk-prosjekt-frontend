@@ -40,6 +40,29 @@
                     <a href="/register" class="btn btn-outline-secondary btn-lg px-4">Registrer Deg</a>
                 </div>
 
+                <!-- User Manual for Not Logged In Users -->
+                <div class="card mt-4">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Brukermanual - Kom i gang</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="mb-3">Hvordan begynne å bruke helpdesk:</h6>
+                        <ol class="mb-4">
+                            <li>Registrer en ny konto ved å klikke "Registrer Deg"</li>
+                            <li>Fyll ut din e-postadresse og velg et sikkert passord</li>
+                            <li>Logg inn med din nye konto</li>
+                            <li>Opprett din første support-sak</li>
+                        </ol>
+
+                        <h6 class="mb-3">Viktig å vite:</h6>
+                        <ul>
+                            <li>Bruk en gyldig e-postadresse du har tilgang til</li>
+                            <li>Passord må være minst 6 tegn langt</li>
+                            <li>Hold påloggingsinformasjonen din sikker</li>
+                        </ul>
+                    </div>
+                </div>
+
             <% } else if (locals.user.role === 'admin') { %>
                 <!-- Admin view -->
                 <div class="row mt-5">
@@ -55,6 +78,30 @@
                                 </a>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Admin Manual -->
+                <div class="card mt-4">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Administratormanual</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="mb-3">Administrative oppgaver:</h6>
+                        <ul class="mb-4">
+                            <li>Overvåk alle support-saker</li>
+                            <li>Tildel saker til riktig support-nivå</li>
+                            <li>Administrer brukerrettigheter</li>
+                            <li>Se statistikk og rapporter</li>
+                        </ul>
+
+                        <h6 class="mb-3">Beste praksis:</h6>
+                        <ul>
+                            <li>Gjennomgå nye saker daglig</li>
+                            <li>Hold supportteamet oppdatert</li>
+                            <li>Følg opp uløste saker</li>
+                            <li>Sørg for jevn arbeidsfordeling</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -98,6 +145,53 @@
                     </div>
                 </div>
 
+                <!-- Support Staff Manual -->
+                <div class="card mt-4">
+                    <div class="card-header bg-<%= locals.user.role === 'first-line' ? 'info' : 'primary' %> text-white">
+                        <h5 class="mb-0">Support Manual - <%= locals.user.role === 'first-line' ? '1. linje' : '2. linje' %></h5>
+                    </div>
+                    <div class="card-body">
+                        <% if (locals.user.role === 'first-line') { %>
+                            <h6 class="mb-3">Håndtering av saker:</h6>
+                            <ol class="mb-4">
+                                <li>Gjennomgå nye saker jevnlig</li>
+                                <li>Sett riktig prioritet basert på:
+                                    <ul>
+                                        <li>Antall berørte brukere</li>
+                                        <li>Kritikalitet for drift</li>
+                                        <li>Tidsaspekt</li>
+                                    </ul>
+                                </li>
+                                <li>Oppdater status løpende</li>
+                                <li>Kommuniser tydelig med brukeren</li>
+                            </ol>
+
+                            <h6 class="mb-3">Når eskalere til 2. linje:</h6>
+                            <ul>
+                                <li>Komplekse tekniske problemer</li>
+                                <li>Behov for systemendringer</li>
+                                <li>Saker som krever spesialkompetanse</li>
+                            </ul>
+                        <% } else { %>
+                            <h6 class="mb-3">Håndtering av eskalerte saker:</h6>
+                            <ol class="mb-4">
+                                <li>Gjennomgå dokumentasjon fra 1. linje</li>
+                                <li>Vurder systemendringer</li>
+                                <li>Utfør grundig rotårsaksanalyse</li>
+                                <li>Dokumenter løsninger for fremtiden</li>
+                            </ol>
+
+                            <h6 class="mb-3">Beste praksis:</h6>
+                            <ul>
+                                <li>Hold 1. linje informert</li>
+                                <li>Dokumenter alle systemendringer</li>
+                                <li>Oppdater kunnskapsbasen</li>
+                                <li>Foreslå forbedringer</li>
+                            </ul>
+                        <% } %>
+                    </div>
+                </div>
+
             <% } else { %>
                 <!-- Regular user view -->
                 <div class="row mt-5">
@@ -126,6 +220,31 @@
                     <div class="card-body">
                         <h4><i class="fas fa-info-circle"></i> Tips</h4>
                         <p class="mb-0">Husk å inkludere så mye relevant informasjon som mulig når du oppretter en ny sak. Dette hjelper oss å løse problemet ditt raskere!</p>
+                    </div>
+                </div>
+
+                <!-- User Manual -->
+                <div class="card mt-4">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Brukermanual</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="mb-3">Hvordan opprette en support-sak:</h6>
+                        <ol class="mb-4">
+                            <li>Klikk på "Opprett Ny Sak" knappen</li>
+                            <li>Fyll ut en beskrivende tittel</li>
+                            <li>Beskriv problemet detaljert</li>
+                            <li>Velg riktig kategori for saken</li>
+                            <li>Send inn saken</li>
+                        </ol>
+
+                        <h6 class="mb-3">Tips for god beskrivelse:</h6>
+                        <ul class="mb-4">
+                            <li>Beskriv hva som skjedde</li>
+                            <li>Når oppstod problemet?</li>
+                            <li>Har du prøvd noe selv?</li>
+                            <li>Inkluder eventuelle feilmeldinger</li>
+                        </ul>
                     </div>
                 </div>
             <% } %>
