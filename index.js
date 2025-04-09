@@ -47,7 +47,7 @@ app.use(authRoutes);
 app.use(ticketRoutes);
 
 app.use(dashboardRoutes);
-
+    
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {

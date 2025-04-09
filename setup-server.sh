@@ -55,6 +55,17 @@ log "Setting up user: geir"
 sudo_run useradd -m -s /bin/bash geir
 sudo_run usermod -aG sudo geir
 
+# Set up welcome message for geir
+cat << 'EOL' | sudo_run tee -a /home/geir/.bashrc
+echo "Welcome to the HelpDesk Server, Geir!"
+echo "===============================>"
+echo "Server Status:"
+echo "- Load Average: $(uptime | awk -F'load average:' '{ print $2 }')"
+echo "- Disk Usage: $(df -h / | awk 'NR==2 {print $5}')"
+echo "- Memory Usage: $(free -h | awk '/^Mem/ {print $3"/"$2}')"
+echo "===============================>"
+EOL
+
 # Set up SSH directory for geir
 sudo_run mkdir -p /home/geir/.ssh
 sudo_run touch /home/geir/.ssh/authorized_keys
@@ -76,6 +87,17 @@ log "Setting up user: monica"
 sudo_run useradd -m -s /bin/bash monica
 sudo_run usermod -aG sudo monica
 
+# Set up welcome message for monica
+cat << 'EOL' | sudo_run tee -a /home/monica/.bashrc
+echo "Welcome to the HelpDesk Server, Monica!"
+echo "===============================>"
+echo "Server Status:"
+echo "- Load Average: $(uptime | awk -F'load average:' '{ print $2 }')"
+echo "- Disk Usage: $(df -h / | awk 'NR==2 {print $5}')"
+echo "- Memory Usage: $(free -h | awk '/^Mem/ {print $3"/"$2}')"
+echo "===============================>"
+EOL
+
 # Set up SSH directory for monica
 sudo_run mkdir -p /home/monica/.ssh
 sudo_run touch /home/monica/.ssh/authorized_keys
@@ -93,6 +115,27 @@ log "Configuring SSH security settings..."
 sudo_run sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 sudo_run sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 sudo_run systemctl restart sshd
+
+# Install and configure UFW firewall
+log "Installing and configuring UFW firewall..."
+sudo_run apt install -y ufw
+
+# Set default policies
+sudo_run ufw default deny incoming
+sudo_run ufw default allow outgoing
+
+# Allow SSH (port 22)
+sudo_run ufw allow ssh
+
+# Allow HTTP (port 80)
+sudo_run ufw allow http
+
+# Allow HTTPS (port 443) for future SSL setup
+sudo_run ufw allow https
+
+# Enable UFW
+log "Enabling UFW firewall..."
+echo "y" | sudo_run ufw enable
 
 # Install required packages
 log "Installing required packages..."
@@ -143,7 +186,7 @@ cd "$APP_DIR"
 # Create .env file
 log "Creating .env file..."
 cat > .env << EOL
-MONGODB_URI=mongodb://localhost:27017/helpdesk
+MONGODB_URI=mongodb://10.12.14.179:27017/helpdesk
 JWT_SECRET=$(openssl rand -base64 32)
 PORT=3000
 NODE_ENV=production
@@ -179,8 +222,10 @@ log "Starting application with PM2..."
 log "Configuring Nginx as reverse proxy..."
 sudo_run tee /etc/nginx/sites-available/helpdesk << 'EOL'
 server {
-    listen 80;
-    server_name _;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    server_name _;  # Change this to your domain name if you have one
 
     location / {
         proxy_pass http://localhost:3000;
@@ -189,8 +234,6 @@ server {
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 }
 EOL
