@@ -9,5 +9,6 @@ router.post("/register", authLimiter, authController.register);
 router.get("/logout", authController.logout);
 
 router.get("/", authController.showIndexPage);
+router.get("/guide", authController.showGuide);
 
 module.exports = router;

@@ -97,6 +97,13 @@ const authController = {
     });
   },
 
+  showGuide: (req, res) => {
+    res.render("help/guide", {
+      title: "Brukermanual",
+      user: res.locals.user,
+    });
+  },
+
   logout: (req, res) => {
     // Clear cookie with same settings as when setting it
     res.clearCookie("token", {
