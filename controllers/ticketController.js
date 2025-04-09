@@ -32,23 +32,32 @@ const ticketController = {
 
   listTickets: async (req, res) => {
     try {
-        // Query the database for tickets created by the logged-in user
-        const tickets = await Ticket.find({ creator: req.user.id });
+        let tickets;
+        
+        if (req.user.role === 'admin') {
+            // Admin sees all tickets
+            tickets = await Ticket.find().populate('creator', 'email');
+        } else if (req.user.role === 'first-line') {
+            // First line sees tickets assigned to first-line
+            tickets = await Ticket.find({ supportLevel: 'first-line' }).populate('creator', 'email');
+        } else if (req.user.role === 'second-line') {
+            // Second line sees tickets assigned to second-line
+            tickets = await Ticket.find({ supportLevel: 'second-line' }).populate('creator', 'email');
+        } else {
+            // Regular users see their own tickets
+            tickets = await Ticket.find({ creator: req.user.id }).populate('creator', 'email');
+        }
 
-        res.render("tickets/list", {
-            title: "My Tickets",
+        res.render(req.user.role === 'admin' ? 'dashboard/index' : 'tickets/list', {
+            title: "Tickets",
             tickets,
-            user: res.locals.user, // Pass user info from middleware
+            user: res.locals.user
         });
     } catch (error) {
         console.error("Error fetching tickets:", error);
-        res.render("tickets/list", {
-            title: "My Tickets",
-            tickets: [],
-            error: "Feilet å laste inn tickets",
-        });
+        res.render("tickets/list", { error: "Failed to load tickets" });
     }
-  },
+},
 
   viewTicket: async (req, res) => {
     try {
@@ -74,52 +83,58 @@ const ticketController = {
 
   updateStatus: async (req, res) => {
     try {
-      const ticket = await Ticket.findById(req.params.id);
-      if (!ticket) {
-        return res.status(404).json({ message: "Ticket ble ikke funnet" });
-      }
+        const ticket = await Ticket.findById(req.params.id);
+        
+        if (!ticket) {
+            return res.status(404).json({ message: "Ticket not found" });
+        }
 
-      ticket.status = req.body.status;
-      ticket.history.push({
-        action: `Status changed to ${req.body.status}`,
-        performedBy: req.user.id,
-      });
+        // Check if user has permission to update this ticket
+        if (req.user.role === 'first-line' && ticket.supportLevel !== 'first-line' ||
+            req.user.role === 'second-line' && ticket.supportLevel !== 'second-line') {
+            return res.redirect(`/tickets/${req.params.id}?error=Not authorized for this support level`);
+        }
 
-      await ticket.save();
+        ticket.status = req.body.status;
+        ticket.history.push({
+            action: `Status updated to ${req.body.status}`,
+            performedBy: req.user.id
+        });
 
-      res.redirect(`/tickets/${req.params.id}`);
+        await ticket.save();
+        res.redirect(`/tickets/${req.params.id}?message=Status updated`);
     } catch (error) {
-      console.error("Error å oppdatere ticket status:", error);
-      res.redirect(
-        `/tickets/${req.params.id}?error=` + encodeURIComponent(error.message)
-      );
+        console.error("Error updating status:", error);
+        res.redirect(`/tickets/${req.params.id}?error=${error.message}`);
     }
-  },
+},
 
   updatePriority: async (req, res) => {
     try {
-      const ticket = await Ticket.findById(req.params.id);
-      if (!ticket) {
-        return res.status(404).json({ message: "Ticket not found" });
-      }
+        const ticket = await Ticket.findById(req.params.id);
+        if (!ticket) {
+            return res.status(404).json({ message: "Ticket not found" });
+        }
 
-      // Update the priority
-      ticket.priority = req.body.priority;
-      ticket.history.push({
-        action: `Priority changed to ${req.body.priority}`,
-        performedBy: req.user.id,
-      });
+        // Check if user has permission to update this ticket
+        if (req.user.role === 'first-line' && ticket.supportLevel !== 'first-line' ||
+            req.user.role === 'second-line' && ticket.supportLevel !== 'second-line') {
+            return res.redirect(`/tickets/${req.params.id}?error=Not authorized for this support level`);
+        }
 
-      await ticket.save();
+        ticket.priority = req.body.priority;
+        ticket.history.push({
+            action: `Priority changed to ${req.body.priority}`,
+            performedBy: req.user.id
+        });
 
-      res.redirect(`/tickets/${req.params.id}`);
+        await ticket.save();
+        res.redirect(`/tickets/${req.params.id}?message=Priority updated`);
     } catch (error) {
-      console.error("Error med å oppdatere ticket prioritet:", error);
-      res.redirect(
-        `/tickets/${req.params.id}?error=` + encodeURIComponent(error.message)
-      );
+        console.error("Error updating priority:", error);
+        res.redirect(`/tickets/${req.params.id}?error=${error.message}`);
     }
-  },
+},
 
   addComment: async (req, res) => {
     try {
@@ -168,6 +183,31 @@ const ticketController = {
         );
     }
 },
+
+// Add this new method to ticketController
+assignTicket: async (req, res) => {
+    try {
+        const { supportLevel } = req.body;
+        const ticket = await Ticket.findById(req.params.id);
+
+        if (!ticket) {
+            return res.redirect(`/tickets/${req.params.id}?error=Saken ble ikke funnet`);
+        }
+
+        // Update the ticket's support level
+        ticket.supportLevel = supportLevel;
+        ticket.history.push({
+            action: `Assigned to ${supportLevel} support`,
+            performedBy: req.user.id
+        });
+
+        await ticket.save();
+        res.redirect(`/tickets/${req.params.id}?message=Support nivå oppdatert`);
+    } catch (error) {
+        console.error('Error assigning ticket:', error);
+        res.redirect(`/tickets/${req.params.id}?error=Kunne ikke tildele saken`);
+    }
+}
 };
 
 module.exports = ticketController;

@@ -13,23 +13,18 @@ const authController = {
     try {
         const { email, password } = req.body;
         
-        console.log('Login attempt:', email); // Debug log
 
         const user = await User.findOne({ email: email.toLowerCase() });
-        console.log('User found:', user ? 'Yes' : 'No'); // Debug log
 
         if (!user || !(await user.comparePassword(password))) {
-            console.log('Password match:', user ? 'No' : 'User not found'); // Debug log
             return res.redirect("/login?error=Ugyldig e-post eller passord");
         }
 
-        console.log('Creating token for user:', user._id); // Debug log
         const token = jwt.sign(
             { id: user._id, email: user.email, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: "24h" }
         );
-        console.log('Token created:', token ? 'Yes' : 'No'); // Debug log
 
         // Add specific cookie settings for VM environment
         res.cookie("token", token, { 
@@ -40,7 +35,6 @@ const authController = {
             domain: req.hostname // Add this
         });
         
-        console.log('Cookie set with token'); // Debug log
         res.redirect("/");
     } catch (error) {
         console.error("Login error details:", error); // Enhanced error logging

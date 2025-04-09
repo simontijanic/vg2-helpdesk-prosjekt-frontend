@@ -25,4 +25,12 @@ const isAdmin = (req, res, next) => {
     }
 };
 
-module.exports = { auth, isAdmin };
+const isSupport = (req, res, next) => {
+    if (req.user && (req.user.role === 'first-line' || req.user.role === 'second-line')) {
+        next();
+    } else {
+        res.redirect("/login?error=Support access required");
+    }
+};
+
+module.exports = { auth, isAdmin, isSupport };

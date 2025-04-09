@@ -9,14 +9,18 @@
         <% if (locals.user) { %>
           <% if (locals.user.role === "admin") { %>
             <li class="nav-item">
-              <a class="nav-link" href="/dashboard">Admin Dashbord</a>
+              <a class="nav-link" href="/dashboard">Admin Dashboard</a>
+            </li>
+          <% } else if (locals.user.role === "first-line" || locals.user.role === "second-line") { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/tickets">Support Dashboard</a>
             </li>
           <% } else { %>
             <li class="nav-item">
-              <a class="nav-link" href="/tickets/create">Opprett Sak</a>
+              <a class="nav-link" href="/tickets/create">Create Ticket</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/tickets">Mine Saker</a>
+              <a class="nav-link" href="/tickets">My Tickets</a>
             </li>
           <% } %>
           <li class="nav-item">

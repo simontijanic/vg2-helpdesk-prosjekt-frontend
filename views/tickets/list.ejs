@@ -1,75 +1,140 @@
 <div class="container-fluid px-4">
     <div class="row mb-4">
-        <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-            <h1 class="h3 mb-3 mb-md-0">Mine Saker</h1>
-            <a href="/tickets/create" class="btn btn-dark">Opprett Ny Sak</a>
+        <div class="col-12">
+            <% if (locals.user.role === 'first-line' || locals.user.role === 'second-line') { %>
+                <h1 class="h3 mb-3">Support Dashboard - <%= locals.user.role === 'first-line' ? '1. linje' : '2. linje' %></h1>
+            <% } else { %>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-3">Mine Saker</h1>
+                    <a href="/tickets/create" class="btn btn-dark">Opprett Ny Sak</a>
+                </div>
+            <% } %>
         </div>
     </div>
 
-    <% if (locals.error) { %>
-        <div class="alert alert-danger" role="alert"><%= error %></div>
+    <!-- Filter Options for Support Staff -->
+    <% if (locals.user.role === 'first-line' || locals.user.role === 'second-line') { %>
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <label for="filterStatus" class="form-label">Status</label>
+                <select id="filterStatus" class="form-select">
+                    <option value="">Alle</option>
+                    <option value="open">Åpen</option>
+                    <option value="in-progress">Under arbeid</option>
+                    <option value="resolved">Løst</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="filterPriority" class="form-label">Prioritet</label>
+                <select id="filterPriority" class="form-select">
+                    <option value="">Alle</option>
+                    <option value="low">Lav</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">Høy</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="search" class="form-label">Søk</label>
+                <input type="text" id="search" class="form-control" placeholder="Søk i saker...">
+            </div>
+        </div>
     <% } %>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body p-0 p-md-3">
-                    <% if (tickets && tickets.length > 0) { %>
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Tittel</th>
-                                        <th>Status</th>
-                                        <th class="d-none d-md-table-cell">Prioritet</th>
-                                        <th class="d-none d-md-table-cell">Opprettet</th>
-                                        <th>Handlinger</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% tickets.forEach(ticket => { %>
-                                        <tr>
-                                            <td class="text-nowrap">#<%= ticket._id.toString().slice(-6) %></td>
-                                            <td class="text-truncate" style="max-width: 150px;"><%= ticket.title %></td>
-                                            <td>
-                                                <span class="badge bg-<%= 
-                                                    ticket.status === 'open' ? 'warning' : 
-                                                    ticket.status === 'in-progress' ? 'info' : 
-                                                    'success' %>">
-                                                    <%= ticket.status === 'open' ? 'Åpen' : 
-                                                        ticket.status === 'in-progress' ? 'Under arbeid' : 
-                                                        'Løst' %>
-                                                </span>
-                                            </td>
-                                            <td class="d-none d-md-table-cell">
-                                                <span class="badge bg-<%= 
-                                                    ticket.priority === 'high' ? 'danger' : 
-                                                    ticket.priority === 'medium' ? 'warning' : 
-                                                    'success' %>">
-                                                    <%= ticket.priority === 'high' ? 'Høy' : 
-                                                        ticket.priority === 'medium' ? 'Medium' : 
-                                                        'Lav' %>
-                                                </span>
-                                            </td>
-                                            <td class="d-none d-md-table-cell"><%= new Date(ticket.createdAt).toLocaleDateString('nb-NO') %></td>
-                                            <td>
-                                                <a href="/tickets/<%= ticket._id %>" class="btn btn-sm btn-dark">Se sak</a>
-                                            </td>
-                                        </tr>
-                                    <% }); %>
-                                </tbody>
-                            </table>
-                        </div>
-                    <% } else { %>
-                        <div class="text-center py-5">
-                            <h4 class="text-muted">Ingen saker funnet</h4>
-                            <p class="mb-4">Du har ikke opprettet noen support-saker ennå.</p>
-                            <a href="/tickets/create" class="btn btn-primary">Opprett Din Første Sak</a>
-                        </div>
-                    <% } %>
-                </div>
+    <!-- Tickets Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tittel</th>
+                            <th>Opprettet av</th>
+                            <th>Status</th>
+                            <th>Prioritet</th>
+                            <% if (locals.user.role === 'first-line' || locals.user.role === 'second-line') { %>
+                                <th>Support Nivå</th>
+                            <% } %>
+                            <th>Opprettet</th>
+                            <th>Handlinger</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% tickets.forEach(ticket => { %>
+                            <tr>
+                                <td>#<%= ticket._id %></td>
+                                <td><%= ticket.title %></td>
+                                <td><%= ticket.creator.email %></td>
+                                <td>
+                                    <span class="badge bg-<%= 
+                                        ticket.status === 'open' ? 'warning' : 
+                                        ticket.status === 'in-progress' ? 'info' : 
+                                        'success' %>">
+                                        <%= ticket.status === 'open' ? 'Åpen' : 
+                                            ticket.status === 'in-progress' ? 'Under arbeid' : 
+                                            'Løst' %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-<%= 
+                                        ticket.priority === 'high' ? 'danger' : 
+                                        ticket.priority === 'medium' ? 'warning' : 
+                                        'success' %>">
+                                        <%= ticket.priority === 'high' ? 'Høy' : 
+                                            ticket.priority === 'medium' ? 'Medium' : 
+                                            'Lav' %>
+                                    </span>
+                                </td>
+                                <% if (locals.user.role === 'first-line' || locals.user.role === 'second-line') { %>
+                                    <td>
+                                        <span class="badge bg-info">
+                                            <%= ticket.supportLevel === 'first-line' ? '1. linje' : '2. linje' %>
+                                        </span>
+                                    </td>
+                                <% } %>
+                                <td><%= new Date(ticket.createdAt).toLocaleDateString('nb-NO') %></td>
+                                <td>
+                                    <a href="/tickets/<%= ticket._id %>" class="btn btn-sm btn-dark">Håndter sak</a>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Add JavaScript for filtering -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterStatus = document.getElementById('filterStatus');
+    const filterPriority = document.getElementById('filterPriority');
+    const search = document.getElementById('search');
+
+    if (filterStatus && filterPriority && search) {
+        const filterTickets = () => {
+            const rows = document.querySelectorAll('tbody tr');
+            const statusValue = filterStatus.value.toLowerCase();
+            const priorityValue = filterPriority.value.toLowerCase();
+            const searchValue = search.value.toLowerCase();
+
+            rows.forEach(row => {
+                const status = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                const priority = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
+                const text = row.textContent.toLowerCase();
+
+                const matchesStatus = !statusValue || status.includes(statusValue);
+                const matchesPriority = !priorityValue || priority.includes(priorityValue);
+                const matchesSearch = !searchValue || text.includes(searchValue);
+
+                row.style.display = matchesStatus && matchesPriority && matchesSearch ? '' : 'none';
+            });
+        };
+
+        filterStatus.addEventListener('change', filterTickets);
+        filterPriority.addEventListener('change', filterTickets);
+        search.addEventListener('input', filterTickets);
+    }
+});
+</script>

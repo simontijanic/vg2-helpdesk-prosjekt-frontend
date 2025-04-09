@@ -35,6 +35,16 @@ const ticketSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Oppretter er påkrevd']
   },
+  assignedTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  supportLevel: {
+    type: String,
+    enum: ['first-line', 'second-line'],
+    default: 'first-line'
+  },
   comments: [{
     text: {
       type: String,

@@ -70,6 +70,14 @@
                         <p class="mb-0"><%= ticket.description %></p>
                     </div>
 
+                    <!-- Show current assignment -->
+                    <div class="mb-3">
+                        <small class="text-muted">Support Nivå:</small>
+                        <span class="badge bg-info">
+                            <%= ticket.supportLevel === 'first-line' ? '1. linje' : '2. linje' %>
+                        </span>
+                    </div>
+
                     <!-- Admin Controls -->
                     <% if (locals.user.role === 'admin') { %>
                         <div class="row g-3 mb-4">
@@ -106,6 +114,59 @@
                                         </form>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Add this inside the admin controls section -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Tildel Support Nivå</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="/tickets/<%= ticket._id %>/assign" method="POST" class="d-flex gap-2">
+                                    <select name="supportLevel" class="form-select" required>
+                                        <option value="first-line" <%= ticket.supportLevel === 'first-line' ? 'selected' : '' %>>1. linje support</option>
+                                        <option value="second-line" <%= ticket.supportLevel === 'second-line' ? 'selected' : '' %>>2. linje support</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-dark">Tildel</button>
+                                </form>
+                            </div>
+                        </div>
+                    <% } %>
+
+                    <!-- Support Staff Controls -->
+                    <% if ((locals.user.role === 'first-line' && ticket.supportLevel === 'first-line') || 
+                           (locals.user.role === 'second-line' && ticket.supportLevel === 'second-line') ||
+                           locals.user.role === 'admin') { %>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Oppdater Status</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="/tickets/<%= ticket._id %>/status" method="POST" class="d-flex gap-2">
+                                    <select name="status" class="form-select" required>
+                                        <option value="open" <%= ticket.status === 'open' ? 'selected' : '' %>>Åpen</option>
+                                        <option value="in-progress" <%= ticket.status === 'in-progress' ? 'selected' : '' %>>Under arbeid</option>
+                                        <option value="resolved" <%= ticket.status === 'resolved' ? 'selected' : '' %>>Løst</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-dark">Oppdater</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Oppdater Prioritet</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="/tickets/<%= ticket._id %>/priority" method="POST" class="d-flex gap-2">
+                                    <select name="priority" class="form-select" required>
+                                        <option value="low" <%= ticket.priority === 'low' ? 'selected' : '' %>>Lav</option>
+                                        <option value="medium" <%= ticket.priority === 'medium' ? 'selected' : '' %>>Medium</option>
+                                        <option value="high" <%= ticket.priority === 'high' ? 'selected' : '' %>>Høy</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-dark">Oppdater</button>
+                                </form>
                             </div>
                         </div>
                     <% } %>
@@ -154,11 +215,14 @@
 
                     <!-- Action Buttons -->
                     <div class="d-grid gap-2 mt-4">
-                        <% if (ticket.status !== 'resolved') { %>
+                        <% if (ticket.status !== 'resolved' && 
+                              (locals.user.role === 'admin' || 
+                              (locals.user.role === 'first-line' && ticket.supportLevel === 'first-line') ||
+                              (locals.user.role === 'second-line' && ticket.supportLevel === 'second-line'))) { %>
                             <form action="/tickets/<%= ticket._id %>/resolve" method="POST" class="d-grid">
                                 <button type="submit" class="btn btn-success">Marker som løst</button>
                             </form>
-                        <% } else { %>
+                        <% } else if (ticket.status === 'resolved') { %>
                             <p class="alert alert-success mb-0 text-center">Denne saken er løst.</p>
                         <% } %>
                         

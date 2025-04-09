@@ -6,9 +6,16 @@
         </div>
     </div>
 
+    <% if (locals.message) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <%= message %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
     <% if (locals.error) { %>
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <%= error %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <% } %>
 
@@ -102,6 +109,75 @@
         </div>
     </div>
 
+    <!-- Support Statistics -->
+    <div class="row mb-4">
+        <!-- First Line Stats -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>1. linje support</h5>
+                </div>
+                <div class="card-body">
+                    <p>Totalt antall saker: <%= stats.firstLine.total %></p>
+                    <p>Løste saker: <%= stats.firstLine.resolved %></p>
+                    <p>Antall supportmedarbeidere: <%= stats.firstLine.users %></p>
+                </div>
+            </div>
+        </div>
+        <!-- Second Line Stats -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>2. linje support</h5>
+                </div>
+                <div class="card-body">
+                    <p>Totalt antall saker: <%= stats.secondLine.total %></p>
+                    <p>Løste saker: <%= stats.secondLine.resolved %></p>
+                    <p>Antall supportmedarbeidere: <%= stats.secondLine.users %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Role Management -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Brukeradministrasjon</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>E-post</th>
+                            <th>Nåværende rolle</th>
+                            <th>Endre rolle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(user => { %>
+                            <tr>
+                                <td><%= user.email %></td>
+                                <td><%= user.role %></td>
+                                <td>
+                                    <form action="/users/<%= user._id %>/role" method="POST" class="d-flex gap-2">
+                                        <select name="role" class="form-select" required>
+                                            <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>Bruker</option>
+                                            <option value="first-line" <%= user.role === 'first-line' ? 'selected' : '' %>>1. linje</option>
+                                            <option value="second-line" <%= user.role === 'second-line' ? 'selected' : '' %>>2. linje</option>
+                                            <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-primary">Oppdater</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- Tickets Table -->
     <div class="card">
         <div class="card-header">
@@ -123,6 +199,7 @@
                             <th>Kategori</th>
                             <th>Status</th>
                             <th>Prioritet</th>
+                            <th>Support Nivå</th>
                             <th>Opprettet</th>
                             <th>Handlinger</th>
                         </tr>
@@ -162,6 +239,11 @@
                                                 'Lav' %>
                                         </span>
                                     </td>
+                                    <td>
+                                        <span class="badge bg-info">
+                                            <%= ticket.supportLevel === 'first-line' ? '1. linje' : '2. linje' %>
+                                        </span>
+                                    </td>
                                     <td><%= new Date(ticket.createdAt).toLocaleDateString('nb-NO') %></td>
                                     <td>
                                         <a href="/tickets/<%= ticket._id %>" class="btn btn-sm btn-dark">Se sak</a>
@@ -170,7 +252,7 @@
                             <% }); %>
                         <% } else { %>
                             <tr>
-                                <td colspan="8" class="text-center">Ingen saker funnet</td>
+                                <td colspan="9" class="text-center">Ingen saker funnet</td>
                             </tr>
                         <% } %>
                     </tbody>
