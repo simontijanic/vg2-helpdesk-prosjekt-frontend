@@ -21,7 +21,7 @@ exports.seedAdmin = async () => {
             console.log('Admin user created successfully');
         }
 
-        // Create support staff
+        // Create support staff - Førstelinje og andrelinje
         const firstLineUser = await User.findOne({ email: 'firstline@helpdesk.com' });
         if (!firstLineUser) {
             await User.create({
@@ -53,48 +53,145 @@ exports.seedAdmin = async () => {
             console.log('Regular user created');
         }
 
-        // Get all created users for reference
+        // Hent opprettede brukere til referanse
         const admin = await User.findOne({ email: 'admin@helpdesk.com' });
         const firstLine = await User.findOne({ email: 'firstline@helpdesk.com' });
         const secondLine = await User.findOne({ email: 'secondline@helpdesk.com' });
         const user = await User.findOne({ email: 'user@example.com' });
 
-        // Create sample tickets
+        // Opprett sample tickets med mer detaljerte beskrivelser og samtaler
         const tickets = [
             {
-                title: "Kan ikke logge inn på PC",
-                description: "Når jeg prøver å logge inn på min arbeidsstasjon, får jeg en feilmelding som sier at passordet er utløpt. Jeg har forsøkt å starte maskinen på nytt, men problemet vedvarer. Jeg har også prøvd å bruke en annen datamaskin for å logge inn, men får samme feilmelding. Dette hindrer meg i å få tilgang til viktige filer og programmer som jeg trenger for å utføre jobben min.",
-                category: "access",
-                status: "resolved",
+                title: "Problemer med Word-dokument – Filen kan ikke åpnes",
+                description: "Når jeg forsøker å åpne et viktig Word-dokument, får jeg en feilmelding om at filen er skadet eller utilgjengelig. Jeg har allerede prøvd å åpne filen på andre datamaskiner og kopiere den til en annen lagringsenhet, men problemet vedvarer. Dette dokumentet er essensielt for utarbeidelsen av rapporter til kunder og interne møter.",
+                category: "software",
+                status: "open",
                 priority: "high",
                 creator: user._id,
                 supportLevel: "first-line",
                 comments: [
                     {
-                        text: "Har du prøvd å endre passordet via vår selvbetjeningsportal? Du kan finne den på password.company.com. Hvis du ikke har tilgang til portalen, kan vi hjelpe deg med å sette opp et nytt passord manuelt.",
+                        text: "Hei! Har du forsøkt å bruke 'Åpne og reparer'-funksjonen i Word? Dette kan ofte redde skadde dokumenter. Pass også på at dokumentet ikke er låst av en annen prosess.",
                         author: firstLine._id,
                         createdAt: new Date()
                     },
                     {
-                        text: "Jeg var ikke klar over portalen. Kan du forklare hvordan jeg bruker den?",
+                        text: "Hei, jeg er ganske fortvilet akkurat nå. Jeg leter gjennom alle menyene, men finner ikke noe som heter 'Åpne og reparer'. Er det en skjult funksjon, eller har jeg helt oversett den?",
                         author: user._id,
                         createdAt: new Date()
                     },
                     {
-                        text: "Selvfølgelig! Gå til password.company.com og logg inn med ditt brukernavn. Klikk deretter på 'Glemt passord' og følg instruksjonene for å tilbakestille passordet. Hvis du møter noen problemer, kan du gi oss beskjed, så kan vi veilede deg videre.",
+                        text: "For å finne funksjonen, åpne Word og klikk på 'Fil' -> 'Åpne'. Velg dokumentet, og deretter klikker du på pilen ved siden av 'Åpne'-knappen. Der burde du se alternativet 'Åpne og reparer'. Har du fått til dette?",
                         author: firstLine._id,
                         createdAt: new Date()
                     },
                     {
-                        text: "Takk for hjelpen! Jeg klarte å endre passordet via portalen, og nå fungerer alt som det skal.",
+                        text: "Jeg prøvde metoden din, men dokumentet returnerer fremdeles en feilmelding. Jeg er nå irritert fordi rapporten min haster, og jeg føler at teknologien svikter meg når jeg trenger den mest!",
+                        author: user._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Jeg forstår frustrasjonen din. Som et neste steg anbefaler jeg å se etter en tidligere lagret versjon av dokumentet hvis du benytter OneDrive eller en annen skylagringstjeneste. Alternativt kan vi undersøke tredjepartsverktøy som kan reparere filen direkte.",
+                        author: firstLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "God idé – jeg fant faktisk en tidligere versjon i OneDrive, og den ser intakt ut! Jeg er lettet, selv om jeg fortsatt lurer på hva som gikk galt. Takk for den grundige hjelpen!",
                         author: user._id,
                         createdAt: new Date()
                     }
                 ]
             },
             {
-                title: "Nettverksproblemer i møterom",
-                description: "Vi opplever svært ustabil internettforbindelse i møterom B3. Dette har vært et problem i flere dager og påvirker både videomøter og presentasjoner. Vi har prøvd å bytte til en annen WiFi-kanal, men det har ikke hjulpet. Problemet ser ut til å være spesifikt for dette møterommet, da andre rom fungerer fint. Dette skaper store utfordringer for teamet vårt, spesielt under viktige møter med eksterne partnere.",
+                title: "PC-skjermen blir blå – Blue Screen of Death ved oppstart",
+                description: "Hver gang jeg starter PC-en, opplever jeg en blåskjerm med feilkode 0x0000008E, noe som fører til tap av usparad arbeid. Feilen oppstår nesten umiddelbart etter BIOS-opplasting, og jeg mistenker at det kan være en driverkonflikt eller et maskinvareproblem.",
+                category: "hardware",
+                status: "in-progress",
+                priority: "high",
+                creator: user._id,
+                supportLevel: "second-line",
+                comments: [
+                    {
+                        text: "Hei, blåskjerm-feil kan ofte skyldes driverkonflikter eller maskinvarefeil. Har du nylig installert noen nye drivere eller oppdateringer?",
+                        author: secondLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Ja, jeg oppdaterte grafikkdriverne forrige uke, men nå virker det som om det har fått alvorlige konsekvenser. Jeg er skikkelig irritert – det påvirker alt arbeidet mitt!",
+                        author: user._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Forståelig nok. Jeg foreslår at du ruller tilbake den siste driveroppdateringen for grafikkortet. I tillegg kan du sjekke systemlogger for å se om det dukker opp ytterligere informasjon om feilkoden.",
+                        author: secondLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Jeg prøvde å rulle tilbake driverne, men feilen dukker opp sporadisk selv etterpå. Nå frykter jeg at det kan være en fysisk feil med maskinvaren.",
+                        author: user._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Da anbefaler jeg at du kjører en diagnostisk test på både minne og harddisk. Start med en minnetest og deretter en sjekk for eventuelle dårlige sektorer på harddisken. Dette vil hjelpe oss med å fastslå hvor problemet ligger.",
+                        author: secondLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Etter å ha kjørt en minnetest, fant jeg ingen feil med RAM, men noen dårlige sektorer ble oppdaget på harddisken. Jeg har tatt backup, men situasjonen har fått meg til å føle meg veldig bekymret.",
+                        author: user._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Det er lurt at du tok backup. Dårlige sektorer kan tyde på at harddisken snart svikter fullstendig. Jeg anbefaler at du vurderer å bytte ut harddisken og reinstallere systemet for å sikre stabil drift.",
+                        author: secondLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Takk for den grundige veiledningen. Jeg er fortsatt litt stressa, men nå har jeg en klar plan framover og føler meg tryggere på hvordan jeg skal håndtere situasjonen.",
+                        author: user._id,
+                        createdAt: new Date()
+                    }
+                ]
+            },
+            {
+                title: "Glemt passord til YouTube-kontoen",
+                description: "Jeg har glemt passordet til YouTube-kontoen min og får ikke tilgang. Hver gang jeg prøver 'Glemt passord', mottar jeg ingen e-post med instruksjoner, og det går ikke an å tilbakestille det. Dette har skapt store forsinkelser i opplasting av videoer og administrasjon av kontoen min.",
+                category: "access",
+                status: "open",
+                priority: "medium",
+                creator: user._id,
+                supportLevel: "first-line",
+                comments: [
+                    {
+                        text: "Hei, har du sjekket spam- eller søppelpostmappen for e-posten med instruksjoner om passordgjenoppretting?",
+                        author: firstLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Jeg har sjekket alle mulige mapper – e-posten er rett og slett ikke der. Dette er utrolig frustrerende, jeg føler at systemet ikke støtter meg når jeg trenger det mest.",
+                        author: user._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Forståelig. I slike tilfeller anbefaler jeg at du går direkte til YouTube sin kontogjenopprettingsside og fyller ut all nødvendig informasjon. Dette kan ofte omgå de vanlige problemene med e-postlevering.",
+                        author: firstLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Jeg fulgte rådene dine og måtte til og med bekrefte identiteten min via telefon. Prosessen var litt omstendelig, men til slutt fikk jeg tilgang igjen. Likevel er jeg litt irritert over at det tok så lang tid.",
+                        author: user._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Det er godt å høre at du fikk løst problemet, selv om prosessen var tungvint. Husk at vi står klare til å hjelpe om du skulle trenge ytterligere assistanse med kontoen din.",
+                        author: firstLine._id,
+                        createdAt: new Date()
+                    }
+                ]
+            },
+            {
+                title: "Internett fungerer ikke i hjemmekontoret",
+                description: "Internettforbindelsen i hjemmekontoret mitt har vært ekstremt ustabil de siste dagene. Jeg opplever hyppige frakoblinger og lav hastighet, noe som forstyrrer både videomøter og tilgang til nødvendige servere. Til tross for at jeg har startet ruteren på nytt og sjekket kablene, fortsetter problemene.",
                 category: "network",
                 status: "in-progress",
                 priority: "high",
@@ -102,113 +199,92 @@ exports.seedAdmin = async () => {
                 supportLevel: "second-line",
                 comments: [
                     {
-                        text: "Kan du prøve å koble til et annet WiFi-nettverk og deretter tilbake til det opprinnelige? Dette kan noen ganger løse midlertidige tilkoblingsproblemer.",
+                        text: "Hei, kan du sjekke om andre enheter i hjemmet også har problemer med internett? Det kan hjelpe oss med å identifisere om feilen ligger i ruterens konfigurasjon eller om leverandøren har større problemer.",
                         author: secondLine._id,
                         createdAt: new Date()
                     },
                     {
-                        text: "Vi har prøvd det, men problemet vedvarer. Hva annet kan vi gjøre?",
+                        text: "Jeg har testet med PC, mobil og nettbrett – alle opplever samme tilkoblingsproblemer. Jeg blir virkelig frustrert, for jeg trenger en stabil forbindelse til jobbmøter og viktige oppgaver.",
                         author: user._id,
                         createdAt: new Date()
                     },
                     {
-                        text: "Prøv å gjenopprette nettverksinnstillingene på enheten som brukes i møterommet. Dette kan gjøres ved å gå til 'Innstillinger' > 'Nettverk og Internett' > 'Tilbakestill nettverk'. Etterpå kan du koble til WiFi på nytt. Gi oss beskjed om dette hjelper.",
+                        text: "La oss prøve en full fabrikktilbakestilling på ruteren. Hent frem rutermanualen og følg instruksjonene for en full reset, og sett opp nettverket på nytt etterpå.",
                         author: secondLine._id,
                         createdAt: new Date()
                     },
                     {
-                        text: "Det ser ut til å ha løst problemet! Tusen takk for hjelpen.",
+                        text: "Jeg fulgte manualen steg for steg – det var en tidkrevende prosess, men etter oppsettet virker forbindelsen litt bedre. Likevel er det fortsatt en uunngåelig følelse av at noe ikke er helt riktig.",
+                        author: user._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Det er bra du ser en forbedring, men hvis problemer fortsetter, anbefaler jeg at du kontakter internettleverandøren for en grundigere sjekk. Vi kan også bistå med feilsøking om nødvendig.",
+                        author: secondLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Jeg skal ta kontakt med leverandøren og håper virkelig på en varig løsning. Takk for oppfølgingen – selv om irritasjonen er stor nå, setter jeg pris på hjelpen din!",
                         author: user._id,
                         createdAt: new Date()
                     }
                 ]
             },
             {
-                title: "Outlook synkroniserer ikke",
-                description: "Outlook har sluttet å synkronisere e-poster siden i går ettermiddag. Jeg har prøvd å starte programmet på nytt, sjekket internettforbindelsen og til og med reinstallert programmet, men problemet vedvarer. Jeg bruker Outlook til å kommunisere med kunder og kolleger, så dette er et kritisk problem for meg. Jeg har også lagt merke til at kalenderen ikke oppdateres, noe som gjør det vanskelig å holde oversikt over møter.",
-                category: "email",
+                title: "Problemer med VPN-tilkobling – Ekstern tilgang svikter",
+                description: "Etter en nylig oppdatering av sikkerhetsinnstillingene på min maskin, klarer jeg ikke å etablere en stabil VPN-tilkobling til firmaets nettverk. Tilkoblingen faller ut etter kort tid, og jeg får feilmeldinger om uautoriserte tilganger. Dette hindrer meg i å jobbe eksternt mens jeg er på reise, og det haster at jeg får en løsning.",
+                category: "access",
                 status: "open",
-                priority: "medium",
-                creator: user._id,
-                supportLevel: "first-line",
-                comments: [
-                    {
-                        text: "Kan du sjekke om du har tilgang til Outlook på web (outlook.office.com)? Dette kan hjelpe oss med å avgjøre om problemet er lokalt på maskinen din eller serverrelatert.",
-                        author: firstLine._id,
-                        createdAt: new Date()
-                    },
-                    {
-                        text: "Ja, jeg kan logge inn på webversjonen uten problemer. Hva bør jeg gjøre videre?",
-                        author: user._id,
-                        createdAt: new Date()
-                    },
-                    {
-                        text: "Det kan være en feil i den lokale installasjonen av Outlook. Prøv å reparere installasjonen ved å gå til 'Kontrollpanel' > 'Programmer og funksjoner', høyreklikk på Outlook og velg 'Reparer'. Hvis dette ikke fungerer, kan vi veilede deg gjennom en manuell konfigurasjon av e-postkontoen din.",
-                        author: firstLine._id,
-                        createdAt: new Date()
-                    }
-                ]
-            },
-            {
-                title: "Printer skriver ut blanke sider",
-                description: "Skriveren på økonomiavdelingen skriver bare ut blanke sider, selv om tonernivået viser fullt. Vi har prøvd å bytte papir, starte skriveren på nytt og til og med reinstallere driverne, men ingenting ser ut til å fungere. Dette problemet har pågått i flere dager og påvirker vår evne til å skrive ut viktige dokumenter som fakturaer og rapporter.",
-                category: "hardware",
-                status: "resolved",
-                priority: "medium",
-                creator: user._id,
-                supportLevel: "first-line",
-                comments: [
-                    {
-                        text: "Kan du åpne skriverens innstillinger og kjøre en rengjøringssyklus? Dette kan ofte løse problemer med utskriftskvalitet.",
-                        author: firstLine._id,
-                        createdAt: new Date()
-                    },
-                    {
-                        text: "Jeg har prøvd det, men det hjalp ikke. Hva annet kan jeg gjøre?",
-                        author: user._id,
-                        createdAt: new Date()
-                    },
-                    {
-                        text: "Prøv å fjerne tonerkassetten og riste den forsiktig for å fordele toneren jevnt. Sett den deretter tilbake og test utskrift igjen. Hvis problemet vedvarer, kan vi veilede deg gjennom en fullstendig tilbakestilling av skriveren.",
-                        author: firstLine._id,
-                        createdAt: new Date()
-                    },
-                    {
-                        text: "Det fungerte! Skriveren skriver ut som normalt nå. Tusen takk!",
-                        author: user._id,
-                        createdAt: new Date()
-                    }
-                ]
-            },
-            {
-                title: "Kan ikke installere programvareoppdatering",
-                description: "Jeg får feilmelding 0x80070057 når jeg prøver å installere den siste oppdateringen av regnskapssystemet. Jeg har prøvd å kjøre installasjonen som administrator, deaktivere antivirusprogrammet og til og med laste ned oppdateringen på nytt, men ingenting fungerer. Dette er kritisk, da oppdateringen inneholder viktige sikkerhetsfikser og nye funksjoner som vi trenger for å overholde regelverket.",
-                category: "software",
-                status: "in-progress",
                 priority: "high",
                 creator: user._id,
                 supportLevel: "second-line",
                 comments: [
                     {
-                        text: "Kan du prøve å kjøre oppdateringen i sikkerhetsmodus? For å gjøre dette, start maskinen på nytt, trykk F8 under oppstart, og velg 'Sikkerhetsmodus med nettverk'. Deretter kan du prøve å installere oppdateringen igjen.",
+                        text: "Hei, VPN-problemer etter systemoppdateringer kan skyldes endringer i konfigurasjonen. Har du forsøkt å starte maskinen på nytt og dobbeltsjekke alle nettverksinnstillingene dine?",
                         author: secondLine._id,
                         createdAt: new Date()
                     },
                     {
-                        text: "Jeg prøvde det, men får fortsatt samme feilmelding. Hva annet kan jeg gjøre?",
+                        text: "Jeg har startet maskinen på nytt flere ganger og kontrollert innstillingene – likevel fortsetter feilen. Jeg får til og med en melding om at tilkoblingen blir blokkert, og jeg begynner å bli veldig stressa siden viktige møter nærmer seg.",
                         author: user._id,
                         createdAt: new Date()
                     },
                     {
-                        text: "Prøv å slette midlertidige filer ved å bruke Diskopprydding. Gå til 'Start' > 'Søk' > 'Diskopprydding', velg systemdisken og slett midlertidige filer. Etterpå kan du prøve oppdateringen på nytt. Gi oss beskjed om dette hjelper.",
+                        text: "Det er forståelig at du føler press. La oss prøve å slette den gamle VPN-konfigurasjonen fullstendig og opprette en ny profil. Dette kan ofte fjerne gamle feilkonfigurasjoner som forårsaker slike blokkeringer.",
                         author: secondLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Jeg slettet den gamle profilen og opprettet en helt ny, men feilmeldingene vedvarer til en viss grad. Det virker også som om serveren til firmaet har problemer med å godkjenne tilkoblingen.",
+                        author: user._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Prøv å midlertidig deaktivere brannmuren din for å sjekke om den hindrer VPN-tilkoblingen. Dette er kun for å teste teorien – husk å aktivere den igjen etterpå!",
+                        author: secondLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Jeg deaktiverte brannmuren for en kort test, og tilkoblingen ble noe mer stabil. Jeg føler en viss lettelse, men bekymrer meg fortsatt for sikkerheten på lang sikt.",
+                        author: user._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Bra at det hjalp noe. Når du føler deg trygg nok, vil vi bistå med å konfigurere brannmurreglene på nytt slik at du både har en sikker og stabil VPN-tilkobling.",
+                        author: secondLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Det høres ut som en god plan. Jeg setter stor pris på den detaljerte oppfølgingen og tålmodigheten deres – takk for at dere hjelper meg gjennom denne krevende prosessen!",
+                        author: user._id,
                         createdAt: new Date()
                     }
                 ]
             }
         ];
+        
 
-        // Insert tickets if they don't exist
+        // Sett inn tickets dersom de ikke allerede eksisterer
         for (const ticket of tickets) {
             const existingTicket = await Ticket.findOne({ title: ticket.title });
             if (!existingTicket) {
