@@ -10,5 +10,7 @@ router.get("/logout", authController.logout);
 
 router.get("/", authController.showIndexPage);
 router.get("/guide", authController.showGuide);
+// Add this route
+router.get("/faq", authController.showFaq);
 
 module.exports = router;

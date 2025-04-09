@@ -1,0 +1,98 @@
+{
+  "version": "1.0",
+  "collections": {
+    "User": {
+      "name": "users",
+      "fields": {
+        "_id": {"type": "ObjectId", "required": true},
+        "email": {"type": "String", "required": true, "unique": true},
+        "password": {"type": "String", "required": true},
+        "role": {"type": "String", "enum": ["user", "admin", "first-line", "second-line"]}
+      }
+    },
+    "Ticket": {
+      "name": "tickets",
+      "fields": {
+        "_id": {"type": "ObjectId", "required": true},
+        "title": {"type": "String", "required": true},
+        "description": {"type": "String", "required": true},
+        "category": {"type": "String", "required": true},
+        "status": {"type": "String", "enum": ["open", "in-progress", "resolved"]},
+        "priority": {"type": "String", "enum": ["low", "medium", "high"]},
+        "creator": {"type": "ObjectId", "ref": "users", "required": true},
+        "assignedTo": {"type": "ObjectId", "ref": "users"},
+        "supportLevel": {"type": "String", "enum": ["first-line", "second-line"]}
+      }
+    },
+    "Comment": {
+      "name": "comments",
+      "fields": {
+        "_id": {"type": "ObjectId", "required": true},
+        "text": {"type": "String", "required": true},
+        "author": {"type": "ObjectId", "ref": "users", "required": true},
+        "ticket": {"type": "ObjectId", "ref": "tickets", "required": true},
+        "createdAt": {"type": "Date", "default": "Date.now"}
+      }
+    },
+    "History": {
+      "name": "history",
+      "fields": {
+        "_id": {"type": "ObjectId", "required": true},
+        "action": {"type": "String", "required": true},
+        "performedBy": {"type": "ObjectId", "ref": "users", "required": true},
+        "ticket": {"type": "ObjectId", "ref": "tickets", "required": true},
+        "timestamp": {"type": "Date", "default": "Date.now"}
+      }
+    }
+  },
+  "relationships": [
+    {
+      "name": "user_tickets_created",
+      "from": "users",
+      "to": "tickets",
+      "type": "one-to-many",
+      "fromField": "_id",
+      "toField": "creator"
+    },
+    {
+      "name": "user_tickets_assigned",
+      "from": "users",
+      "to": "tickets",
+      "type": "one-to-many",
+      "fromField": "_id",
+      "toField": "assignedTo"
+    },
+    {
+      "name": "ticket_comments",
+      "from": "tickets",
+      "to": "comments",
+      "type": "one-to-many",
+      "fromField": "_id",
+      "toField": "ticket"
+    },
+    {
+      "name": "user_comments",
+      "from": "users",
+      "to": "comments",
+      "type": "one-to-many",
+      "fromField": "_id",
+      "toField": "author"
+    },
+    {
+      "name": "ticket_history",
+      "from": "tickets",
+      "to": "history",
+      "type": "one-to-many",
+      "fromField": "_id",
+      "toField": "ticket"
+    },
+    {
+      "name": "user_history",
+      "from": "users",
+      "to": "history",
+      "type": "one-to-many",
+      "fromField": "_id",
+      "toField": "performedBy"
+    }
+  ]
+}

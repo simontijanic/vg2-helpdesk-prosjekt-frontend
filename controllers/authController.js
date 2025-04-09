@@ -104,6 +104,13 @@ const authController = {
     });
   },
 
+  showFaq: (req, res) => {
+    res.render("help/faq", {
+        title: "Ofte Stilte Spørsmål",
+        user: res.locals.user
+    });
+  },
+
   logout: (req, res) => {
     // Clear cookie with same settings as when setting it
     res.clearCookie("token", {
