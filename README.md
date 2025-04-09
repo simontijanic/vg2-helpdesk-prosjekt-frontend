@@ -148,46 +148,30 @@ Standard admin-bruker:
 
 ## ER-Diagram
 
-```plaintext
-+-------------------+          +-------------------+
-|      User         |          |      Ticket       |
-+-------------------+          +-------------------+
-| * _id (PK)        |<---------| * _id (PK)        |
-| email             |          | title             |
-| password          |          | description       |
-| role              |          | category          |
-+-------------------+          | status            |
-                               | priority          |
-                               | creator (FK)      |
-                               +-------------------+
-                                       |
-                                       |
-                                       v
-                               +-------------------+
-                               |    Comment        |
-                               +-------------------+
-                               | * _id (PK)        |
-                               | text              |
-                               | author (FK)       |
-                               | createdAt         |
-                               +-------------------+
-```
+Følgende diagram viser relasjonene mellom entitetene i databasen:
 
-### Forklaring
-- **User**:
-  - Primærnøkkel: `_id`
-  - Felter: `email`, `password`, `role`
-  - Relasjon: En bruker kan opprette flere tickets (`creator` er en fremmednøkkel i `Ticket`).
+![ER Diagram](public/images/diagram)
 
-- **Ticket**:
-  - Primærnøkkel: `_id`
-  - Felter: `title`, `description`, `category`, `status`, `priority`, `creator`
-  - Relasjon: En ticket kan ha flere kommentarer (`author` er en fremmednøkkel i `Comment`).
+### Relasjoner:
+1. **Bruker ↔ Ticket**:
+   - En `Bruker` kan opprette flere `Tickets` (en-til-mange-relasjon).
+   - Feltet `creator` i `Ticket`-modellen refererer til `_id` i `User`-modellen.
 
-- **Comment**:
-  - Primærnøkkel: `_id`
-  - Felter: `text`, `author`, `createdAt`
-  - Relasjon: En kommentar er knyttet til én ticket og én bruker.
+2. **Ticket ↔ Kommentar**:
+   - En `Ticket` kan ha flere `Kommentarer` (en-til-mange-relasjon).
+   - Feltet `ticket` i `Comment`-modellen refererer til `_id` i `Ticket`-modellen.
+
+3. **Bruker ↔ Kommentar**:
+   - En `Kommentar` er skrevet av en `Bruker` (mange-til-en-relasjon).
+   - Feltet `author` i `Comment`-modellen refererer til `_id` i `User`-modellen.
+
+4. **Ticket ↔ Historikk**:
+   - En `Ticket` kan ha flere `Historikk`-oppføringer (en-til-mange-relasjon).
+   - Feltet `ticket` i `History`-modellen refererer til `_id` i `Ticket`-modellen.
+
+5. **Bruker ↔ Historikk**:
+   - En `Historikk`-oppføring er utført av en `Bruker` (mange-til-en-relasjon).
+   - Feltet `performedBy` i `History`-modellen refererer til `_id` i `User`-modellen.
 
 # BASH SCRIPT
 ## Server Oppsett (Ubuntu 22.04)
@@ -392,3 +376,110 @@ Security Best Practices:
 - Monitor logs for unauthorized access attempts
 - Use SSL/TLS for MongoDB connections in production
 - Follow the principle of least privilege when creating users
+
+## Sikkerhetsoppsett
+
+### 1. SSH Match Blocks
+SSH-konfigurasjonen bruker **Match Blocks** for å spesifisere regler for ulike brukere og grupper. Dette er definert i `setup-server.sh`-scriptet:
+
+- **Global SSH-innstillinger**:
+  - `PermitRootLogin no`: Root-innlogging er deaktivert.
+  - `MaxAuthTries 3`: Maksimalt 3 forsøk på autentisering før tilkoblingen avsluttes.
+  - `ClientAliveInterval 300`: Serveren sender en "keep-alive"-melding hvert 300. sekund.
+  - `ClientAliveCountMax 2`: Tilkoblingen avsluttes etter 2 manglende svar.
+
+- **Match Blocks**:
+  - **Utviklere**:
+    ```
+    Match User dev
+        AllowTcpForwarding yes
+        X11Forwarding yes
+        PasswordAuthentication no
+        PermitTTY yes
+        MaxSessions 10
+        AllowAgentForwarding yes
+        PermitTunnel yes
+    ```
+    - Tillater TCP-forwarding, X11-forwarding og agent-forwarding.
+    - Maksimalt 10 samtidige sesjoner.
+
+  - **Administratorer (geir, monica)**:
+    ```
+    Match User geir,monica
+        AllowTcpForwarding yes
+        X11Forwarding no
+        PasswordAuthentication no
+        PermitTTY yes
+        MaxSessions 3
+    ```
+    - Tillater TCP-forwarding, men ikke X11-forwarding.
+    - Maksimalt 3 samtidige sesjoner.
+
+  - **Andre brukere**:
+    ```
+    Match Group users
+        AllowTcpForwarding no
+        X11Forwarding no
+        PasswordAuthentication no
+        PermitTTY yes
+        MaxSessions 2
+    ```
+    - Ingen forwarding tillatt.
+    - Maksimalt 2 samtidige sesjoner.
+
+  - **Internt nettverk**:
+    ```
+    Match Address 10.0.0.0/8
+        MaxSessions 5
+    ```
+    - Maksimalt 5 samtidige sesjoner for tilkoblinger fra det interne nettverket.
+
+### 2. UFW-regler
+UFW (Uncomplicated Firewall) er konfigurert for å beskytte serveren. Reglene er definert i `setup-server.sh` og gjelder for både applikasjonsserveren (Nginx/Node.js) og databasen (MongoDB).
+
+#### **UFW-regler for Nginx/Node.js-serveren**:
+- **Standardpolicyer**:
+  - `sudo ufw default deny incoming`: Blokkerer alle innkommende tilkoblinger som standard.
+  - `sudo ufw default allow outgoing`: Tillater alle utgående tilkoblinger som standard.
+
+- **Tillatte porter**:
+  - `sudo ufw allow ssh`: Tillater SSH-tilkoblinger (port 22).
+  - `sudo ufw allow http`: Tillater HTTP-trafikk (port 80).
+  - `sudo ufw allow https`: Tillater HTTPS-trafikk (port 443).
+
+- **Aktivering**:
+  - `sudo ufw enable`: Aktiverer brannmuren.
+
+#### **UFW-regler for MongoDB-serveren**:
+- **Standardpolicyer**:
+  - `sudo ufw default deny incoming`: Blokkerer alle innkommende tilkoblinger som standard.
+  - `sudo ufw default allow outgoing`: Tillater alle utgående tilkoblinger som standard.
+
+- **Tillatte porter**:
+  - `sudo ufw allow ssh`: Tillater SSH-tilkoblinger (port 22).
+  - `sudo ufw allow from <app-server-ip> to any port 27017`: Tillater MongoDB-tilkoblinger kun fra applikasjonsserverens IP.
+
+- **Aktivering**:
+  - `sudo ufw enable`: Aktiverer brannmuren.
+
+Ved å skille reglene på denne måten blir det tydelig hvilke regler som gjelder for applikasjonsserveren og hvilke som gjelder for databasen.
+
+### 3. IP-binding til MongoDB
+MongoDB er konfigurert til å kun lytte på spesifikke IP-adresser for økt sikkerhet. Dette er definert i `setup-server.sh` og MongoDB-konfigurasjonsfilen (`/etc/mongod.conf`):
+
+- **Konfigurasjon**:
+  ```yaml
+  net:
+    port: 27017
+    bindIp: 127.0.0.1,<mongodb-server-ip>
+  ```
+  - `127.0.0.1`: Tillater kun lokale tilkoblinger.
+  - `<mongodb-server-ip>`: Tillater tilkoblinger fra applikasjonsserverens IP.
+
+- **Aktivering**:
+  Etter å ha oppdatert konfigurasjonsfilen, må MongoDB startes på nytt:
+  ```bash
+  sudo systemctl restart mongod
+  ```
+
+Disse sikkerhetsmekanismene sikrer at serveren og databasen er beskyttet mot uautoriserte tilkoblinger.
