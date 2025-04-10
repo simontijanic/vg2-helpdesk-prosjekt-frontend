@@ -62,8 +62,8 @@ exports.seedAdmin = async () => {
         // Opprett sample tickets med mer detaljerte beskrivelser og samtaler
         const tickets = [
             {
-                title: "Problemer med Word-dokument – Filen kan ikke åpnes",
-                description: "Når jeg forsøker å åpne et viktig Word-dokument, får jeg en feilmelding om at filen er skadet eller utilgjengelig. Jeg har allerede prøvd å åpne filen på andre datamaskiner og kopiere den til en annen lagringsenhet, men problemet vedvarer. Dette dokumentet er essensielt for utarbeidelsen av rapporter til kunder og interne møter.",
+                title: "problemer med jævla Word dokuemnterrr!!!",
+                description: "når jeg forsøker å åpne et viktig word dokument så  får jeg en feilmelding om at filen er skadet eller utilgjengelig. jeg har allerede prøvd å åpne filen på andre datamaskiner og kopiere den til en annen lagringsenhet men det jævla  problemet vedvarer. Dette dokumentet er drit viktig for meg og for utarbeidelsen av rapporter til kunder og interne møter jeg skal ha!!",
                 category: "software",
                 status: "open",
                 priority: "high",
@@ -76,7 +76,7 @@ exports.seedAdmin = async () => {
                         createdAt: new Date()
                     },
                     {
-                        text: "Hei, jeg er ganske fortvilet akkurat nå. Jeg leter gjennom alle menyene, men finner ikke noe som heter 'Åpne og reparer'. Er det en skjult funksjon, eller har jeg helt oversett den?",
+                        text: "jeg er ganske fortvilet akkurat nå. Jeg leter gjennom alle menyene men finner ikke noe jalla ting som heter 'Åpne og reparer'. Er det en skjult funksjon eller har jeg helt oversett den?",
                         author: user._id,
                         createdAt: new Date()
                     },
@@ -86,7 +86,7 @@ exports.seedAdmin = async () => {
                         createdAt: new Date()
                     },
                     {
-                        text: "Jeg prøvde metoden din, men dokumentet returnerer fremdeles en feilmelding. Jeg er nå irritert fordi rapporten min haster, og jeg føler at teknologien svikter meg når jeg trenger den mest!",
+                        text: "Jeg prøvde metoden din men dokumentet returnerer fremdeles en feilmelding. er så pissed fordi rapporten min haster og jeg føler at teknologien svikter meg når jeg trenger den mest!",
                         author: user._id,
                         createdAt: new Date()
                     },
@@ -96,15 +96,15 @@ exports.seedAdmin = async () => {
                         createdAt: new Date()
                     },
                     {
-                        text: "God idé – jeg fant faktisk en tidligere versjon i OneDrive, og den ser intakt ut! Jeg er lettet, selv om jeg fortsatt lurer på hva som gikk galt. Takk for den grundige hjelpen!",
+                        text: "helvete, det tenkte jeg ikke på! jeg fant faktisk en tidligere versjon i OneDrive selv om den ikke er oppdater er det bedre enn ingenting! Jeg er lettet selv om jeg fortsatt lurer på hva som gikk galt. Takk for den hjelpen G!",
                         author: user._id,
                         createdAt: new Date()
                     }
                 ]
             },
             {
-                title: "PC-skjermen blir blå – Blue Screen of Death ved oppstart",
-                description: "Hver gang jeg starter PC-en, opplever jeg en blåskjerm med feilkode 0x0000008E, noe som fører til tap av usparad arbeid. Feilen oppstår nesten umiddelbart etter BIOS-opplasting, og jeg mistenker at det kan være en driverkonflikt eller et maskinvareproblem.",
+                title: "PC-skjermen blir bare blå",
+                description: "Hver gang jeg starter PC-en, opplever jeg en blåskjerm med feilkode 0x0000008E, noe som fører til at jeg mister arbeid. Feilen oppstår nesten umiddelbart etter BIOS-opplasting og jeg mistenker at det kan være noe fysisk med pc-en min.",
                 category: "hardware",
                 status: "in-progress",
                 priority: "high",
@@ -117,7 +117,7 @@ exports.seedAdmin = async () => {
                         createdAt: new Date()
                     },
                     {
-                        text: "Ja, jeg oppdaterte grafikkdriverne forrige uke, men nå virker det som om det har fått alvorlige konsekvenser. Jeg er skikkelig irritert – det påvirker alt arbeidet mitt!",
+                        text: "Ja, jeg oppdaterte grafikkdriverne forrige uke, men nå plutselig så får jeg de problemene. Jeg er skikkelig irritert siden jeg må arbeide og bruke pc-en til viktig greier!!",
                         author: user._id,
                         createdAt: new Date()
                     },
@@ -153,9 +153,11 @@ exports.seedAdmin = async () => {
                     }
                 ]
             },
+            
             {
-                title: "Glemt passord til YouTube-kontoen",
-                description: "Jeg har glemt passordet til YouTube-kontoen min og får ikke tilgang. Hver gang jeg prøver 'Glemt passord', mottar jeg ingen e-post med instruksjoner, og det går ikke an å tilbakestille det. Dette har skapt store forsinkelser i opplasting av videoer og administrasjon av kontoen min.",
+                title: "glemt passord til yt-kontoen drittkjip",
+                description: "jeg har glemt passordet til youtube kontoen min og får ikkje mail med instruksjoner. det er skikkelig dritt, men æ orker ikkje den greia med å nullstilla, eg fikser det sjøl om alle sier at eg må."
+                ,
                 category: "access",
                 status: "open",
                 priority: "medium",
@@ -168,27 +170,44 @@ exports.seedAdmin = async () => {
                         createdAt: new Date()
                     },
                     {
-                        text: "Jeg har sjekket alle mulige mapper – e-posten er rett og slett ikke der. Dette er utrolig frustrerende, jeg føler at systemet ikke støtter meg når jeg trenger det mest.",
+                        text: "Ey, hvem ass sjekker sånt? Det er jo bare kjedelige mailar og æ diggar berre youtube og alt annet, ikke sånn at æ skal stresse med sånt pølse.",
                         author: user._id,
                         createdAt: new Date()
                     },
                     {
-                        text: "Forståelig. I slike tilfeller anbefaler jeg at du går direkte til YouTube sin kontogjenopprettingsside og fyller ut all nødvendig informasjon. Dette kan ofte omgå de vanlige problemene med e-postlevering.",
+                        text: "For å være sikker anbefaler jeg likevel at du sjekker både spam- og søppelpostmappen. Noen ganger havner passordgjenopprettingsmeldinger der, selv om det kan virke unødvendig.",
                         author: firstLine._id,
                         createdAt: new Date()
                     },
                     {
-                        text: "Jeg fulgte rådene dine og måtte til og med bekrefte identiteten min via telefon. Prosessen var litt omstendelig, men til slutt fikk jeg tilgang igjen. Likevel er jeg litt irritert over at det tok så lang tid.",
+                        text: "Haha, æ har sjekka alt og spam, søppel, alt det der. Æ orker ikkje sånn kjedelig trøbbel. Æ vet jo alt, ass, eg er liksom for kul til å la sånt stoppe meg.",
                         author: user._id,
                         createdAt: new Date()
                     },
                     {
-                        text: "Det er godt å høre at du fikk løst problemet, selv om prosessen var tungvint. Husk at vi står klare til å hjelpe om du skulle trenge ytterligere assistanse med kontoen din.",
+                        text: "Dersom du fortsatt ikke mottar e-posten, vil jeg anbefale at du går direkte til YouTube sin kontogjenopprettingsside og fyller ut all nødvendig informasjon for å tilbakestille passordet.",
                         author: firstLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Kontogjenopprettingsside? Sleng det med, ass! Æ har det jo helt under kontroll. Det er bare for folk som ikkje fikser ting sjøl. Jeg fikser det, jeg er tross alt på topp!",
+                        author: user._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Husk at om du senere skulle ønske litt veiledning, står vi klare til å hjelpe. Vi er her for å sikre at du får den assistansen du trenger.",
+                        author: firstLine._id,
+                        createdAt: new Date()
+                    },
+                    {
+                        text: "Alright, får se om jeg fikser det på min måte. Jeg viser jo at jeg er kul, men skal vel sjekka det hvis det virkelig blir nødvendig. Peace!",
+                        author: user._id,
                         createdAt: new Date()
                     }
                 ]
             },
+            
+
             {
                 title: "Internett fungerer ikke i hjemmekontoret",
                 description: "Internettforbindelsen i hjemmekontoret mitt har vært ekstremt ustabil de siste dagene. Jeg opplever hyppige frakoblinger og lav hastighet, noe som forstyrrer både videomøter og tilgang til nødvendige servere. Til tross for at jeg har startet ruteren på nytt og sjekket kablene, fortsetter problemene.",
@@ -204,7 +223,7 @@ exports.seedAdmin = async () => {
                         createdAt: new Date()
                     },
                     {
-                        text: "Jeg har testet med PC, mobil og nettbrett – alle opplever samme tilkoblingsproblemer. Jeg blir virkelig frustrert, for jeg trenger en stabil forbindelse til jobbmøter og viktige oppgaver.",
+                        text: "Jeg har testet med PC, mobil og nettbrett og alle opplever samme tilkoblingsproblemer. Jeg blir virkelig frustrert, for jeg trenger en stabil forbindelse til jobbmøter og viktige oppgaver.",
                         author: user._id,
                         createdAt: new Date()
                     },
@@ -214,7 +233,7 @@ exports.seedAdmin = async () => {
                         createdAt: new Date()
                     },
                     {
-                        text: "Jeg fulgte manualen steg for steg – det var en tidkrevende prosess, men etter oppsettet virker forbindelsen litt bedre. Likevel er det fortsatt en uunngåelig følelse av at noe ikke er helt riktig.",
+                        text: "Jeg fulgte manualen steg for steg og det var en tidkrevende prosess, men etter oppsettet virker forbindelsen litt bedre. Likevel er det fortsatt en uunngåelig følelse av at noe ikke er helt riktig.",
                         author: user._id,
                         createdAt: new Date()
                     },
@@ -224,14 +243,14 @@ exports.seedAdmin = async () => {
                         createdAt: new Date()
                     },
                     {
-                        text: "Jeg skal ta kontakt med leverandøren og håper virkelig på en varig løsning. Takk for oppfølgingen – selv om irritasjonen er stor nå, setter jeg pris på hjelpen din!",
+                        text: "Jeg skal ta kontakt med leverandøren og håper virkelig på en varig løsning. Takk for oppfølgingen og selv om irritasjonen er stor nå, setter jeg pris på hjelpen din!",
                         author: user._id,
                         createdAt: new Date()
                     }
                 ]
             },
             {
-                title: "Problemer med VPN-tilkobling – Ekstern tilgang svikter",
+                title: "Problemer med VPN",
                 description: "Etter en nylig oppdatering av sikkerhetsinnstillingene på min maskin, klarer jeg ikke å etablere en stabil VPN-tilkobling til firmaets nettverk. Tilkoblingen faller ut etter kort tid, og jeg får feilmeldinger om uautoriserte tilganger. Dette hindrer meg i å jobbe eksternt mens jeg er på reise, og det haster at jeg får en løsning.",
                 category: "access",
                 status: "open",
@@ -245,7 +264,7 @@ exports.seedAdmin = async () => {
                         createdAt: new Date()
                     },
                     {
-                        text: "Jeg har startet maskinen på nytt flere ganger og kontrollert innstillingene – likevel fortsetter feilen. Jeg får til og med en melding om at tilkoblingen blir blokkert, og jeg begynner å bli veldig stressa siden viktige møter nærmer seg.",
+                        text: "Jeg har startet maskinen på nytt flere ganger og kontrollert innstillingene og likevel fortsetter feilen. Jeg får til og med en melding om at tilkoblingen blir blokkert, og jeg begynner å bli veldig stressa siden viktige møter nærmer seg.",
                         author: user._id,
                         createdAt: new Date()
                     },
@@ -260,7 +279,7 @@ exports.seedAdmin = async () => {
                         createdAt: new Date()
                     },
                     {
-                        text: "Prøv å midlertidig deaktivere brannmuren din for å sjekke om den hindrer VPN-tilkoblingen. Dette er kun for å teste teorien – husk å aktivere den igjen etterpå!",
+                        text: "Prøv å midlertidig deaktivere brannmuren din for å sjekke om den hindrer VPN-tilkoblingen. Dette er kun for å teste teorien og husk å aktivere den igjen etterpå!",
                         author: secondLine._id,
                         createdAt: new Date()
                     },
@@ -275,7 +294,7 @@ exports.seedAdmin = async () => {
                         createdAt: new Date()
                     },
                     {
-                        text: "Det høres ut som en god plan. Jeg setter stor pris på den detaljerte oppfølgingen og tålmodigheten deres – takk for at dere hjelper meg gjennom denne krevende prosessen!",
+                        text: "Det høres ut som en god plan. Jeg setter stor pris på den detaljerte oppfølgingen og tålmodigheten deres og takk for at dere hjelper meg gjennom denne krevende prosessen!",
                         author: user._id,
                         createdAt: new Date()
                     }
